@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,21 +59,24 @@ class MainActivity : ComponentActivity() {
 
             AssignmentCTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                        MazeDisplay(Modifier.align(Alignment.Center),maze)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        MazeDisplay(Modifier.padding(16.dp), maze)
+                        Spacer(modifier = Modifier.height(30.dp))
+                        MovementButtons(onMove = { direction ->
+                            maze.movePlayer(direction)
+                            maze = maze.copySelf()
+                        })
                     }
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @Composable
@@ -120,10 +133,19 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
                     horizontalArrangement = Arrangement.spacedBy(margin),
                     verticalAlignment = Alignment.CenterVertically) {
                     for (x in 0..toDisplay.Height-1){
+                        val tile = toDisplay.Tiles[x][y]
                         var tileColor = Color(0xFFBDBDBD)
+                        val enemyOnTile = toDisplay.enemies.any { it.currentTile == tile }
 
-                        if (toDisplay.Tiles[x][y].IsWall)
+                        if (tile.IsWall) {
                             tileColor = Color(0xFF3D3D3D)
+                        } else if (tile.isPlayerLocation) {
+                            tileColor = Color.Green
+                        }
+
+                        if (enemyOnTile) {
+                            tileColor = Color.Red
+                        }
 
                         /*Box(modifier = Modifier.size(20.dp).drawWithCache {
                             val tile = RoundedPolygon(
@@ -143,6 +165,41 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MovementButtons(modifier: Modifier = Modifier, onMove: (TileDirection) -> Unit
+) {
+    val buttonSize = 50.dp
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        IconButton(onClick = { onMove(TileDirection.North) }, modifier = Modifier.size(buttonSize)) {
+            Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Up")
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { onMove(TileDirection.West) }, modifier = Modifier.size(buttonSize)) {
+                Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = "Left")
+            }
+
+            Spacer(modifier = Modifier.size(buttonSize))
+
+            IconButton(onClick = { onMove(TileDirection.East) }, modifier = Modifier.size(buttonSize)) {
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "Right")
+            }
+        }
+
+        IconButton(onClick = { onMove(TileDirection.South) }, modifier = Modifier.size(buttonSize)) {
+            Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "South")
         }
     }
 }

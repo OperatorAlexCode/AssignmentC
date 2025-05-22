@@ -10,10 +10,14 @@ class Maze {
     // 0, Height-1 is the lower left corner and
     // Width-1, Height-1 is the lower right corner
     var Tiles: Array<Array<Tile>> = emptyArray()
+    var player: Player? = null
+    var enemies: MutableList<Enemy> = mutableListOf()
 
     constructor() {
         Construct()
         ConnectTiles()
+        spawnPlayer()
+        spawnEnemies()
     }
 
     constructor(height: Int, width:Int) {
@@ -58,4 +62,45 @@ class Maze {
                         Tiles[x][y].EastTile = Tiles[x+1][y]
             }
     }
+
+    fun spawnPlayer() {
+        val nonWallTiles = Tiles.flatten().filter { !it.IsWall }
+        val spawnTile = nonWallTiles.first()
+        spawnTile.setPlayerLocation()
+        player = Player(spawnTile)
+    }
+
+    fun spawnEnemies() {
+        val nonWallOrPlayerTiles = Tiles.flatten().filter { !it.IsWall && !it.isPlayerLocation }
+        val spawnTiles = nonWallOrPlayerTiles.shuffled().take(3)
+
+        for (tile in spawnTiles) {
+            enemies.add(Enemy(tile))
+        }
+    }
+
+    fun moveEnemies() {
+        for (enemy in enemies) {
+            enemy.move()
+        }
+    }
+
+    fun movePlayer(direction: TileDirection) {
+        val nextTile = player?.currentTile?.GetTile(direction)
+        if (nextTile != null && !nextTile.IsWall) {
+            player?.currentTile?.isPlayerLocation = false
+            nextTile.isPlayerLocation = true
+            player?.currentTile = nextTile
+        }
+    }
+
+    //function to force recomp
+    fun copySelf(): Maze {
+        return Maze(Height, Width).also {
+            it.Tiles = this.Tiles
+            it.player = this.player
+            it.enemies = this.enemies
+        }
+    }
+
 }

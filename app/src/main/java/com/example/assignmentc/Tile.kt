@@ -4,6 +4,7 @@ class Tile {
     val XPos: Int
     val YPos: Int
     val IsWall: Boolean
+    var isPlayerLocation: Boolean
 
     // If tile isn't null then a walkable tile exist in the corresponding direction,
     // otherwise the tile is inaccessable or there is no tile
@@ -16,6 +17,7 @@ class Tile {
         XPos = xPos
         YPos = yPos
         IsWall = isWall
+        isPlayerLocation = false
     }
 
     fun GetTile(tileToGet:TileDirection):Tile? {
@@ -24,6 +26,14 @@ class Tile {
             TileDirection.South -> return SouthTile
             TileDirection.East -> return EastTile
             TileDirection.West -> return WestTile
+        }
+    }
+
+    fun setPlayerLocation() {
+        if (isPlayerLocation) {
+            isPlayerLocation = false
+        } else {
+            isPlayerLocation = true
         }
     }
 }
