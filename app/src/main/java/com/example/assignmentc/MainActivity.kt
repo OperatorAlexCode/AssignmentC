@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,8 +43,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.drawscope.draw
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
@@ -55,7 +61,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var maze by remember { mutableStateOf(Maze()) }
+            var maze by remember { mutableStateOf(TempleMaze()) }
 
             AssignmentCTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -81,8 +87,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
-    val dimension = 300.dp
-    val margin = 4.dp
+    val dimension = 360.dp
+    val margin = 0.dp
 
     /*Box(modifier = modifier.size(dimension)) {
         LazyColumn(modifier = Modifier.fillMaxSize(),
@@ -127,45 +133,110 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
             verticalArrangement = Arrangement.spacedBy(margin),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            for (y in 0..toDisplay.Width-1)
+            // Upper border
+            Row(modifier = Modifier.fillMaxSize().weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(margin),
+                verticalAlignment = Alignment.CenterVertically) {
+
+                for (x in 0..toDisplay.Size+1){
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
+                }
+            }
+
+            for (y in 0..<toDisplay.Size)
             {
                 Row(modifier = Modifier.fillMaxSize().weight(1f),
                     horizontalArrangement = Arrangement.spacedBy(margin),
                     verticalAlignment = Alignment.CenterVertically) {
-                    for (x in 0..toDisplay.Height-1){
-                        val tile = toDisplay.Tiles[x][y]
-                        var tileColor = Color(0xFFBDBDBD)
-                        val enemyOnTile = toDisplay.enemies.any { it.currentTile == tile }
 
-                        if (tile.IsWall) {
-                            tileColor = Color(0xFF3D3D3D)
-                        } else if (tile.isPlayerLocation) {
-                            tileColor = Color.Green
+                    // Border Left
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
+
+                    for (x in 0..<toDisplay.Size){
+                        var image = R.drawable.floor
+
+                        if (toDisplay.Tiles[x][y].IsWall)
+                            image = R.drawable.wall
+
+                        CreateTile(Modifier.weight(1f)
+                            .background(Color(0xFF3D3D3D))
+                            .fillMaxSize()
+                            .defaultMinSize(10.dp,10.dp))
+                        {
+                            Image(bitmap = ImageBitmap.imageResource(image),
+                                contentDescription = "",
+                                modifier = Modifier.fillMaxSize(),
+                                filterQuality = FilterQuality.None)
+
+                        // Draw other sprites here
                         }
-
-                        if (enemyOnTile) {
-                            tileColor = Color.Red
-                        }
-
-                        /*Box(modifier = Modifier.size(20.dp).drawWithCache {
-                            val tile = RoundedPolygon(
-                                numVertices = 4,
-                                radius = size.minDimension/2,
-                                centerX = size.width/2,
-                                centerY = size.height/2
-                            )
-                            //Log.d("Shape", "Drawing shape $tile")
-                            val path = tile.toPath().asComposePath()
-                            onDrawBehind {
-                                drawPath(path,color = tileColor)
-                            }
-                        }.fillMaxSize())*/
-
-                        Box(modifier = Modifier.weight(1f).background(tileColor).fillMaxSize().defaultMinSize(10.dp,10.dp))
                     }
+
+                    // Border right
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
+                }
+            }
+
+            // Lower border
+            Row(modifier = Modifier.fillMaxSize().weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(margin),
+                verticalAlignment = Alignment.CenterVertically) {
+
+                for (x in 0..toDisplay.Size+1){
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CreateTile(modifier:Modifier) {
+    Box(modifier = modifier)
+}
+
+@Composable
+fun CreateTile(modifier:Modifier, image: Int) {
+    Box(modifier = modifier) {
+        Image(bitmap = ImageBitmap.imageResource(image),
+            contentDescription = "",
+            modifier = Modifier.fillMaxSize(),
+            filterQuality = FilterQuality.None)
+    }
+}
+
+@Composable
+fun CreateTile(modifier:Modifier, image: Int, content: @Composable () -> Unit) {
+    Box(modifier = modifier) {
+        Image(bitmap = ImageBitmap.imageResource(image),
+            contentDescription = "",
+            modifier = Modifier.fillMaxSize(),
+            filterQuality = FilterQuality.None)
+
+        content()
+    }
+}
+
+@Composable
+fun CreateTile(modifier:Modifier, content: @Composable () -> Unit) {
+    Box(modifier = modifier) {
+        content()
     }
 }
 
