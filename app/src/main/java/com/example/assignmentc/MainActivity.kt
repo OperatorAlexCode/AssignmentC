@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(30.dp))
                         MovementButtons(onMove = { direction ->
                             maze.movePlayer(direction)
-                            //maze = maze.copySelf()
+                            maze = maze.copySelf()
                         })
                     }
                 }

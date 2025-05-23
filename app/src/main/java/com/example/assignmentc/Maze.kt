@@ -11,6 +11,7 @@ open class Maze {
     // 0, Height-1 is the lower left corner and
     // Width-1, Height-1 is the lower right corner
     var Tiles: Array<Array<Tile>> = Array(Size) { emptyArray() }
+    var Tiles: Array<Array<Tile>> = emptyArray()
     var player: Player? = null
     var enemies: MutableList<Enemy> = mutableListOf()
 
@@ -94,13 +95,13 @@ open class Maze {
     }
 
     //function to force recomp
-    /*fun copySelf(): Maze {
-        return Maze(Size).also {
+    fun copySelf(): Maze {
+        return Maze(Height, Width).also {
             it.Tiles = this.Tiles
             it.player = this.player
             it.enemies = this.enemies
         }
-    }*/
+    }
 
 }
 
