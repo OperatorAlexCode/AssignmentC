@@ -11,7 +11,6 @@ open class Maze {
     // 0, Height-1 is the lower left corner and
     // Width-1, Height-1 is the lower right corner
     var Tiles: Array<Array<Tile>> = Array(Size) { emptyArray() }
-    var Tiles: Array<Array<Tile>> = emptyArray()
     var player: Player? = null
     var enemies: MutableList<Enemy> = mutableListOf()
 
@@ -27,6 +26,13 @@ open class Maze {
         Tiles = Array(Size) { emptyArray() }
         Construct()
         ConnectTiles()
+    }
+
+    constructor(toCopy: Maze) {
+        Size = toCopy.Size
+        Tiles = toCopy.Tiles
+        player = toCopy.player
+        enemies = toCopy.enemies
     }
 
     // Default constructor that is used to create the maze using a given instruction
@@ -96,11 +102,7 @@ open class Maze {
 
     //function to force recomp
     fun copySelf(): Maze {
-        return Maze(Height, Width).also {
-            it.Tiles = this.Tiles
-            it.player = this.player
-            it.enemies = this.enemies
-        }
+        return Maze(this)
     }
 
 }

@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var maze by remember { mutableStateOf(TempleMaze()) }
+            var maze:Maze by remember { mutableStateOf(TempleMaze()) }
 
             AssignmentCTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
