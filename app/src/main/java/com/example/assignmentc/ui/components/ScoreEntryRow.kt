@@ -13,38 +13,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmentc.ui.screens.ScoreEntryData
+import com.example.assignmentc.data.ScoreEntry
 
 @Composable
-fun ScoreEntry(
-    entry: ScoreEntryData,
-    modifier: Modifier = Modifier
-) {
+fun ScoreEntryRow(entry: ScoreEntry) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = 2.dp
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
-            modifier = modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = entry.name,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Text(text = entry.name)
             Text(
                 text = entry.score.toString(),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold
-                ),
-                color = MaterialTheme.colorScheme.primary
+                )
             )
         }
     }

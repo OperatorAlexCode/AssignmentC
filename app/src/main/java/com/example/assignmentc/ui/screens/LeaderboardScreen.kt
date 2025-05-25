@@ -15,47 +15,42 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.assignmentc.ui.components.ScoreEntry
-
-data class ScoreEntryData(
-    val name: String,
-    val score: Int
-)
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.assignmentc.data.AppDatabase
+import com.example.assignmentc.data.ScoreRepository
+import com.example.assignmentc.ui.components.ScoreEntryRow
+import com.example.assignmentc.ui.viewmodels.LeaderboardViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun LeaderboardScreen(modifier: Modifier = Modifier) {
+fun LeaderboardScreen() {
+    val context = LocalContext.current
+    val viewModel: LeaderboardViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                // Use the context captured outside the factory
+                val database = AppDatabase.getDatabase(context.applicationContext)
+                val repository = ScoreRepository(database.scoreDao())
+                @Suppress("UNCHECKED_CAST")
+                return LeaderboardViewModel(repository) as T
+            }
+        }
+    )
+
     var selectedTab by remember { mutableStateOf("local") }
+    val localScores by viewModel.localScores.collectAsState(initial = emptyList())
+    val onlineScores by viewModel.onlineScores.collectAsState()
 
-    // Sample data
-    val localScores = remember {
-        listOf(
-            ScoreEntryData("Player1", 2450),
-            ScoreEntryData("Player2", 1800),
-            ScoreEntryData("BestPlayer", 3000),
-            ScoreEntryData("Newbie", 750),
-            ScoreEntryData("TestUser", 1500)
-        ).sortedByDescending { it.score }
-    }
-
-    val onlineScores = remember {
-        listOf(
-            ScoreEntryData("GlobalChamp", 9820),
-            ScoreEntryData("ProPlayer", 7650),
-            ScoreEntryData("SkyMaster", 6800),
-            ScoreEntryData("DragonSlayer", 5500),
-            ScoreEntryData("Beginner", 3200)
-        ).sortedByDescending { it.score }
-    }
-
-    Column(modifier = modifier.fillMaxSize()) {
-        // Tab selector
+    Column(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,18 +65,22 @@ fun LeaderboardScreen(modifier: Modifier = Modifier) {
             TabButton(
                 text = "Online",
                 isSelected = selectedTab == "online",
-                onClick = { selectedTab = "online" }
+                onClick = {
+                    selectedTab = "online"
+                    viewModel.loadOnlineScores()
+                }
             )
         }
 
-        // Leaderboard list
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(8.dp)
         ) {
-            items(if (selectedTab == "local") localScores else onlineScores,
-                key = { it.name }) { entry ->
-                ScoreEntry(entry = entry)
+            items(
+                items = if (selectedTab == "local") localScores else onlineScores,
+                key = { it.name }
+            ) { entry ->
+                ScoreEntryRow(entry = entry)
             }
         }
     }
@@ -107,10 +106,4 @@ private fun TabButton(
     ) {
         Text(text = text)
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LeaderboardScreenPreview() {
-    LeaderboardScreen()
 }
