@@ -1,7 +1,6 @@
 package com.example.assignmentc.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.assignmentc.data.ScoreEntry
 import com.example.assignmentc.data.ScoreRepository
@@ -23,18 +22,7 @@ class LeaderboardViewModel(
         }
     }
 
-    // Add your online leaderboard implementation here
     fun loadOnlineScores() {
-        // Implement your online leaderboard logic
-    }
-}
-
-class LeaderboardViewModelFactory(private val repository: ScoreRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LeaderboardViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return LeaderboardViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        // TODO: online leaderboard if there's time
     }
 }

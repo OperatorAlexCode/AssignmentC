@@ -1,4 +1,4 @@
-package com.example.assignmentc
+package com.example.assignmentc.logic
 
 class Player(var currentTile: Tile) {
     //var item: Item? = null //TODO: implement item "holding"

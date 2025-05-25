@@ -1,6 +1,5 @@
-package com.example.assignmentc
+package com.example.assignmentc.logic
 
-import kotlin.math.abs
 import kotlin.math.floor
 
 open class Maze {

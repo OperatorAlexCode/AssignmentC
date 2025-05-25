@@ -1,4 +1,4 @@
-package com.example.assignmentc
+package com.example.assignmentc.logic
 
 class Enemy(var currentTile: Tile) {
 

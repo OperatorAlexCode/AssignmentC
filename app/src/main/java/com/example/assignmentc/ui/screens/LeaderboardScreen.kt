@@ -30,14 +30,16 @@ import com.example.assignmentc.data.ScoreRepository
 import com.example.assignmentc.ui.components.ScoreEntryRow
 import com.example.assignmentc.ui.viewmodels.LeaderboardViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.assignmentc.ui.components.AddScoreDialog
 
 @Composable
-fun LeaderboardScreen() {
+fun LeaderboardScreen(
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
     val viewModel: LeaderboardViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                // Use the context captured outside the factory
                 val database = AppDatabase.getDatabase(context.applicationContext)
                 val repository = ScoreRepository(database.scoreDao())
                 @Suppress("UNCHECKED_CAST")
@@ -46,9 +48,19 @@ fun LeaderboardScreen() {
         }
     )
 
+    var showAddScoreDialog by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableStateOf("local") }
     val localScores by viewModel.localScores.collectAsState(initial = emptyList())
     val onlineScores by viewModel.onlineScores.collectAsState()
+
+    if (showAddScoreDialog) {
+        AddScoreDialog(
+            onDismiss = { showAddScoreDialog = false },
+            onSave = { name, score ->
+                viewModel.submitLocalScore(name, score)
+            }
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -73,7 +85,9 @@ fun LeaderboardScreen() {
         }
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f),
             contentPadding = PaddingValues(8.dp)
         ) {
             items(
@@ -81,6 +95,29 @@ fun LeaderboardScreen() {
                 key = { it.name }
             ) { entry ->
                 ScoreEntryRow(entry = entry)
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = { showAddScoreDialog = true },
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Text("Add Score")
+            }
+
+            Button(
+                onClick = onBack,
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Text("Back to Game")
             }
         }
     }
