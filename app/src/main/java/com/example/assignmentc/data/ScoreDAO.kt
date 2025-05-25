@@ -14,6 +14,6 @@ interface ScoreDao {
     @Query("SELECT * FROM scores ORDER BY score DESC")
     fun getAllScores(): Flow<List<ScoreEntry>>
 
-    @Query("SELECT * FROM scores WHERE name = :username LIMIT 1")
+    @Query("SELECT * FROM scores WHERE username = :username LIMIT 1")
     suspend fun getScoreByUsername(username: String): ScoreEntry?
 }
