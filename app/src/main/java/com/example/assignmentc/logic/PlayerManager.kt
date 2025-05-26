@@ -1,4 +1,4 @@
-package com.example.assignmentc
+package com.example.assignmentc.logic
 
 class PlayerManager(private val maze: Maze) {
     var player: Player? = null

@@ -1,4 +1,4 @@
-package com.example.assignmentc
+package com.example.assignmentc.logic
 
 class EnemyManager(private val maze: Maze) {
     var enemies: MutableList<Enemy> = mutableListOf()
