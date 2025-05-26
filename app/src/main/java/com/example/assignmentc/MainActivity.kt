@@ -16,6 +16,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            var maze:Maze by remember { mutableStateOf(TempleMaze()) }
+            val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(maze))}
+            playerManager.spawnPlayer()
+            val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(maze))}
+            enemyManager.spawnEnemies()
+
             AssignmentCTheme {
                 MazeNavigationApp()
             }
