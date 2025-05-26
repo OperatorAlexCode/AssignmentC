@@ -1,5 +1,6 @@
 package com.example.assignmentc.logic
 
+
 class PlayerManager(private val maze: Maze) {
     var player: Player? = null
     var locationTile: Tile? = null
@@ -11,9 +12,11 @@ class PlayerManager(private val maze: Maze) {
     }
 
     fun movePlayer(direction: TileDirection) {
-        val currentTile = player?.currentTile ?: return
-        val nextTile = currentTile.GetTile(direction)
+        val nextTile = player?.currentTile?.GetTile(direction)
         if (nextTile != null && !nextTile.IsWall) {
+            player?.currentTile?.isPlayerLocation = false
+            nextTile.isPlayerLocation = true
+            //player?.currentTile = nextTile
             locationTile = nextTile
         }
     }

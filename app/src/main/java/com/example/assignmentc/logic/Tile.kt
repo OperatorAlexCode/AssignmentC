@@ -28,14 +28,6 @@ class Tile {
             TileDirection.West -> return WestTile
         }
     }
-
-    fun setPlayerLocation() {
-        if (isPlayerLocation) {
-            isPlayerLocation = false
-        } else {
-            isPlayerLocation = true
-        }
-    }
 }
 
 enum class TileDirection {

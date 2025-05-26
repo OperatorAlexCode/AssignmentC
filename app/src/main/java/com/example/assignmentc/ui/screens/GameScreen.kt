@@ -15,7 +15,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.Maze
+import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
@@ -23,6 +25,10 @@ import com.example.assignmentc.ui.components.MovementButtons
 @Composable
 fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
     var maze: Maze by remember { mutableStateOf(TempleMaze()) }
+    val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(maze)) }
+    playerManager.spawnPlayer()
+    val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(maze)) }
+    enemyManager.spawnEnemies()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -36,7 +42,7 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
             Spacer(modifier = Modifier.height(30.dp))
             MovementButtons(
                 onMove = { direction ->
-                    maze.movePlayer(direction)
+                    playerManager.movePlayer(direction)
                     maze = maze.copySelf()
                 },
                 onShowLeaderboard = onNavigateToLeaderboard
