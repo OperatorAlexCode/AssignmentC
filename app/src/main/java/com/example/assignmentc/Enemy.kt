@@ -13,4 +13,8 @@ class Enemy(var currentTile: Tile) {
             }
         }
     }
+
+    fun getLocationTile(): Tile {
+        return currentTile
+    }
 }

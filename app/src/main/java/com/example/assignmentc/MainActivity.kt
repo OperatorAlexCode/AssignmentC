@@ -62,6 +62,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var maze:Maze by remember { mutableStateOf(TempleMaze()) }
+            val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(maze))}
+            playerManager.spawnPlayer()
+            val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(maze))}
+            enemyManager.spawnEnemies()
 
             AssignmentCTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -75,7 +79,7 @@ class MainActivity : ComponentActivity() {
                         MazeDisplay(Modifier.padding(16.dp), maze)
                         Spacer(modifier = Modifier.height(30.dp))
                         MovementButtons(onMove = { direction ->
-                            maze.movePlayer(direction)
+                            playerManager.movePlayer(direction)
                             maze = maze.copySelf()
                         })
                     }
