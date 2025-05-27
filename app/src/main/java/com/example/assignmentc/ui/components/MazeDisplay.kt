@@ -126,15 +126,17 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager
                                 }
                             }
 
-                            /*else if (enemyManager.enemies.any { e ->
-                                e.currentTile.XPos == x && e.currentTile.YPos == y
-                                })
+                            else if (enemyManager.enemies.any { e -> e.isOnTile(x,y) })
                             {
-                                Image(bitmap = playerManager.player?.GetSprite().asImageBitmap(),
-                                    contentDescription = "",
-                                    modifier = Modifier.fillMaxSize(),
-                                    filterQuality = FilterQuality.None)
-                            }*/
+                                var enemy = enemyManager.enemies.find { e -> e.isOnTile(x,y) }
+
+                                enemy?.let {
+                                    Image(bitmap = it.Animation.GetSprite().asImageBitmap(),
+                                        contentDescription = "",
+                                        modifier = Modifier.fillMaxSize(),
+                                        filterQuality = FilterQuality.None)
+                                }
+                            }
                         }
                     }
 

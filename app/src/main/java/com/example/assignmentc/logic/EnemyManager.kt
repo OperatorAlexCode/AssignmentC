@@ -1,6 +1,8 @@
 package com.example.assignmentc.logic
 
-class EnemyManager(private val maze: Maze) {
+import android.content.Context
+
+class EnemyManager(var context: Context, private val maze: Maze) {
     var enemies: MutableList<Enemy> = mutableListOf()
 
     fun spawnEnemies() {
@@ -8,7 +10,7 @@ class EnemyManager(private val maze: Maze) {
         val spawnTiles = nonWallOrPlayerTiles.shuffled().take(3)
 
         for (tile in spawnTiles) {
-            enemies.add(Enemy(tile))
+            enemies.add(Enemy(context,tile))
         }
     }
 

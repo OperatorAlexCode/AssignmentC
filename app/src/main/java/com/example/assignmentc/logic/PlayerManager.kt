@@ -5,6 +5,7 @@ import android.content.Context
 class PlayerManager(var context: Context, private val maze: Maze) {
     var player: Player? = null
     //var locationTile: Tile? = null
+    var score: Int = 0
 
     fun spawnPlayer() {
         //val nonWallTiles = maze.Tiles.flatten().filter { !it.IsWall }
@@ -36,6 +37,12 @@ class PlayerManager(var context: Context, private val maze: Maze) {
     }
 
     fun isOnTile(x:Int,y:Int): Boolean {
-        return player?.currentTile?.XPos == x && player?.currentTile?.YPos == y
+        var output = false
+
+        player?.let {
+            output = it.IsOnTile(x,y)
+        }
+
+        return output
     }
 }

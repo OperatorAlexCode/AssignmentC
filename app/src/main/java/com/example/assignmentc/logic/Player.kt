@@ -16,4 +16,8 @@ class Player(private var context: Context, var currentTile: Tile?) {
     fun GetSprite(): Bitmap {
         return animation.GetSprite()
     }
+
+    fun IsOnTile(x:Int,y:Int): Boolean {
+        return currentTile?.XPos == x && currentTile?.YPos == y
+    }
 }

@@ -29,7 +29,7 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
     var maze: Maze by remember { mutableStateOf(TempleMaze()) }
     val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
     playerManager.spawnPlayer()
-    val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(maze)) }
+    val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
     enemyManager.spawnEnemies()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -46,6 +46,7 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
                 onMove = { direction ->
                     playerManager.movePlayer(direction)
                     maze = maze.copySelf()
+                    enemyManager.moveAllEnemies()
                 },
                 onShowLeaderboard = onNavigateToLeaderboard
             )
