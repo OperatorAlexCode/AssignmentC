@@ -32,5 +32,6 @@ class EnemyManager(private val maze: Maze) {
 
     fun moveEnemy() {
         //TODO - Do we need to move a single enemy or only all at same time?
+        //TODO - It's the simplest option to move all at a time | Alex
     }
 }

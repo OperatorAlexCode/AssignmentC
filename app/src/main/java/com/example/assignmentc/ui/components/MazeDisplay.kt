@@ -12,16 +12,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.Maze
+import com.example.assignmentc.logic.PlayerManager
 
 @Composable
-fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
+fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager, enemyManager: EnemyManager) {
     val dimension = 360.dp
     val margin = 0.dp
 
@@ -112,6 +116,25 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
                                 filterQuality = FilterQuality.None)
 
                             // Draw other sprites here
+                            if (playerManager.isOnTile(x,y))
+                            {
+                                playerManager.player?.let {
+                                    Image(bitmap = it.GetSprite().asImageBitmap(),
+                                        contentDescription = "",
+                                        modifier = Modifier.fillMaxSize(),
+                                        filterQuality = FilterQuality.None)
+                                }
+                            }
+
+                            /*else if (enemyManager.enemies.any { e ->
+                                e.currentTile.XPos == x && e.currentTile.YPos == y
+                                })
+                            {
+                                Image(bitmap = playerManager.player?.GetSprite().asImageBitmap(),
+                                    contentDescription = "",
+                                    modifier = Modifier.fillMaxSize(),
+                                    filterQuality = FilterQuality.None)
+                            }*/
                         }
                     }
 

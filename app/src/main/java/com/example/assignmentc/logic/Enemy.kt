@@ -3,7 +3,7 @@ package com.example.assignmentc.logic
 class Enemy(var currentTile: Tile) {
 
     fun move() {
-        val directions = TileDirection.entries.shuffled()
+        val directions = Direction.entries.shuffled()
 
         for (direction in directions) {
             val nextTile = currentTile.GetTile(direction)

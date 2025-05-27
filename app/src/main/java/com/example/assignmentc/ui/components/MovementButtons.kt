@@ -19,12 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.assignmentc.logic.TileDirection
+import com.example.assignmentc.logic.Direction
 
 @Composable
 fun MovementButtons(
     modifier: Modifier = Modifier,
-    onMove: (TileDirection) -> Unit,
+    onMove: (Direction) -> Unit,
     onShowLeaderboard: () -> Unit
 ) {
     val buttonSize = 50.dp
@@ -34,7 +34,7 @@ fun MovementButtons(
         verticalArrangement = Arrangement.Center
     ) {
         // Existing movement buttons code
-        IconButton(onClick = { onMove(TileDirection.North) }, modifier = Modifier.size(buttonSize)) {
+        IconButton(onClick = { onMove(Direction.North) }, modifier = Modifier.size(buttonSize)) {
             Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Up")
         }
 
@@ -42,18 +42,18 @@ fun MovementButtons(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onMove(TileDirection.West) }, modifier = Modifier.size(buttonSize)) {
+            IconButton(onClick = { onMove(Direction.West) }, modifier = Modifier.size(buttonSize)) {
                 Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = "Left")
             }
 
             Spacer(modifier = Modifier.size(buttonSize))
 
-            IconButton(onClick = { onMove(TileDirection.East) }, modifier = Modifier.size(buttonSize)) {
+            IconButton(onClick = { onMove(Direction.East) }, modifier = Modifier.size(buttonSize)) {
                 Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "Right")
             }
         }
 
-        IconButton(onClick = { onMove(TileDirection.South) }, modifier = Modifier.size(buttonSize)) {
+        IconButton(onClick = { onMove(Direction.South) }, modifier = Modifier.size(buttonSize)) {
             Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "South")
         }
 

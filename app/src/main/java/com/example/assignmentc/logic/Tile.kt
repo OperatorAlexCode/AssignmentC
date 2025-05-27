@@ -20,17 +20,17 @@ class Tile {
         isPlayerLocation = false
     }
 
-    fun GetTile(tileToGet:TileDirection):Tile? {
+    fun GetTile(tileToGet:Direction):Tile? {
         when (tileToGet) {
-            TileDirection.North -> return NorthTile
-            TileDirection.South -> return SouthTile
-            TileDirection.East -> return EastTile
-            TileDirection.West -> return WestTile
+            Direction.North -> return NorthTile
+            Direction.South -> return SouthTile
+            Direction.East -> return EastTile
+            Direction.West -> return WestTile
         }
     }
 }
 
-enum class TileDirection {
+enum class Direction {
     North,
     South,
     East,

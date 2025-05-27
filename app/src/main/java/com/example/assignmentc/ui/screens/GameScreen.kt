@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.Maze
@@ -24,8 +25,9 @@ import com.example.assignmentc.ui.components.MovementButtons
 
 @Composable
 fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
+    var context = LocalContext.current
     var maze: Maze by remember { mutableStateOf(TempleMaze()) }
-    val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(maze)) }
+    val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
     playerManager.spawnPlayer()
     val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(maze)) }
     enemyManager.spawnEnemies()
@@ -38,7 +40,7 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            MazeDisplay(Modifier.padding(16.dp), maze)
+            MazeDisplay(Modifier.padding(16.dp), maze,playerManager,enemyManager)
             Spacer(modifier = Modifier.height(30.dp))
             MovementButtons(
                 onMove = { direction ->

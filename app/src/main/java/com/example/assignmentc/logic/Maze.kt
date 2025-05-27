@@ -49,19 +49,19 @@ open class Maze {
         for (x in 0..Size-1)
             for (y in 0.. Size-1) {
                 if (y - 1 >= 0)
-                    if (!Tiles[x][y-1].IsWall && Tiles[x][y].NorthTile != null)
+                    if (!Tiles[x][y-1].IsWall && Tiles[x][y].NorthTile == null)
                         Tiles[x][y].NorthTile = Tiles[x][y-1]
 
                 if (y + 1 < Size)
-                    if (!Tiles[x][y+1].IsWall && Tiles[x][y].SouthTile != null)
+                    if (!Tiles[x][y+1].IsWall && Tiles[x][y].SouthTile == null)
                         Tiles[x][y].SouthTile = Tiles[x][y+1]
 
                 if (x - 1 >= 0)
-                    if (!Tiles[x-1][y].IsWall && Tiles[x][y].WestTile != null)
+                    if (!Tiles[x-1][y].IsWall && Tiles[x][y].WestTile == null)
                         Tiles[x][y].WestTile = Tiles[x-1][y]
 
                 if (x + 1 < Size)
-                    if (!Tiles[x+1][y].IsWall && Tiles[x][y].EastTile != null)
+                    if (!Tiles[x+1][y].IsWall && Tiles[x][y].EastTile == null)
                         Tiles[x][y].EastTile = Tiles[x+1][y]
             }
     }
