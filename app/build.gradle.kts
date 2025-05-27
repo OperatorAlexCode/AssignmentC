@@ -71,7 +71,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.navigation.compose)
     // Firebase BoM (Bill of Materials)
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
     // Firestore
     implementation(libs.firebase.firestore.ktx)
     // Optional: Add if you need analytics/auth later
