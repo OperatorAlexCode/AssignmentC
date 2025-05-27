@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -69,4 +70,10 @@ dependencies {
     // Coroutines and navigation
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.navigation.compose)
+    // Firebase BoM (Bill of Materials)
+    implementation(libs.firebase.bom)
+    // Firestore
+    implementation(libs.firebase.firestore.ktx)
+    // Optional: Add if you need analytics/auth later
+    implementation(libs.google.firebase.analytics)
 }
