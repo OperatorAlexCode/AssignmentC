@@ -3,8 +3,7 @@ package com.example.assignmentc.logic
 import android.content.Context
 
 
-class PlayerManager(var context: Context, private val maze: Maze) {
-    private val trapManager = TrapManager(maze)
+class PlayerManager(var context: Context, private val maze: Maze, private val trapManager: TrapManager) {
 
     var player: Player? = null
     //var locationTile: Tile? = null

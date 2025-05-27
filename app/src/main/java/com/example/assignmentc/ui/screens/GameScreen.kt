@@ -29,7 +29,7 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
     val context = LocalContext.current
     var maze: Maze by remember { mutableStateOf(TempleMaze()) }
     val trapManager by remember { mutableStateOf(TrapManager(maze)) }
-    val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
+    val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze, trapManager)) }
     playerManager.spawnPlayer()
     val enemyManager by remember { mutableStateOf(EnemyManager(context,maze, trapManager))}
     enemyManager.spawnEnemies()
