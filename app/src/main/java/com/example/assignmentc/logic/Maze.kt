@@ -238,3 +238,14 @@ class TempleMaze: Maze() {
         }
     }
 }
+
+/**
+ * Return every Tile in this maze as a flat list.
+ */
+fun Maze.allTiles(): List<Tile> {
+    return (0 until Size).flatMap { x ->
+        (0 until Size).map { y ->
+            this.Tiles[x][y]
+        }
+    }
+}
