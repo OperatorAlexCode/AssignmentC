@@ -20,17 +20,22 @@ import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
+import com.example.assignmentc.logic.TrapManager
+import com.example.assignmentc.logic.Trap
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 
 @Composable
 fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
-    var context = LocalContext.current
+    val context = LocalContext.current
     var maze: Maze by remember { mutableStateOf(TempleMaze()) }
+    val trapManager by remember { mutableStateOf(TrapManager(maze)) }
     val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
     playerManager.spawnPlayer()
-    val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
+    val enemyManager by remember { mutableStateOf(EnemyManager(context,maze, trapManager))}
     enemyManager.spawnEnemies()
+    trapManager.spawnRandomTrap()
+
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -40,15 +45,33 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            MazeDisplay(Modifier.padding(16.dp), maze,playerManager,enemyManager)
+            MazeDisplay(
+                modifier = Modifier.padding(16.dp),
+                toDisplay = maze,
+                playerManager = playerManager,
+                enemyManager = enemyManager,
+                trapTile = trapManager.getGroundTrapTile()
+            )
             Spacer(modifier = Modifier.height(30.dp))
             MovementButtons(
                 onMove = { direction ->
                     playerManager.movePlayer(direction)
-                    maze = maze.copySelf()
+                    playerManager.tickTurn()
                     enemyManager.moveAllEnemies()
+                    trapManager.tickAll()
+                    if (!trapManager.isHeld() && trapManager.getGroundTrapTile() == null) {
+                        trapManager.spawnRandomTrap()
+                    }
+                    maze = maze.copySelf()
                 },
-                onShowLeaderboard = onNavigateToLeaderboard
+                onDropTrap = {
+                    if (playerManager.canDropTrap()) {
+                        playerManager.dropTrap()
+                        maze = maze.copySelf()
+                    }
+                },
+                onShowLeaderboard = onNavigateToLeaderboard,
+                canDrop = playerManager.canDropTrap()
             )
         }
     }

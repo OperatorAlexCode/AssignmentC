@@ -25,7 +25,9 @@ import com.example.assignmentc.logic.Direction
 fun MovementButtons(
     modifier: Modifier = Modifier,
     onMove: (Direction) -> Unit,
-    onShowLeaderboard: () -> Unit
+    onDropTrap: () -> Unit,
+    onShowLeaderboard: () -> Unit,
+    canDrop: Boolean
 ) {
     val buttonSize = 50.dp
     Column(
@@ -55,6 +57,15 @@ fun MovementButtons(
 
         IconButton(onClick = { onMove(Direction.South) }, modifier = Modifier.size(buttonSize)) {
             Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "South")
+        }
+
+        // added: drop-trap button
+        Button(
+            onClick = onDropTrap,
+            enabled = canDrop,
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Text("Drop Trap")
         }
 
         Button(

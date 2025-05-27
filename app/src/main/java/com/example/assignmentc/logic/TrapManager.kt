@@ -4,9 +4,9 @@ import kotlin.random.Random
 
 class TrapManager(
     private val maze: Maze,
-    private val spawnLifetime: Int = 7,   // turns before an unpicked trap expires
+    private val spawnLifetime: Int = 15,   // turns before an unpicked trap expires
     private val holdLifetime: Int = 10,    // turns the player can hold a trap
-    private val dropLifetime: Int = 7     // turns a dropped trap remains active
+    private val dropLifetime: Int = 15     // turns a dropped trap remains active
 ) {
     private var activeTrap: Trap? = null
     private var heldTurnsRemaining: Int = 0
@@ -16,7 +16,15 @@ class TrapManager(
         if (activeTrap != null || heldTurnsRemaining > 0) return
 
         val freeTiles = maze.allTiles()
-            .filter { !it.isWall && !it.hasPlayer && !it.hasEnemy }
+            // 1. must not be a wall
+            .filter { !it.IsWall }
+            // 2. must not have the player standing on it
+            .filter { !it.isPlayerLocation }
+            // 3. must not have any enemy on it
+            .filter { tile ->
+                maze.enemies.none { enemy -> enemy.currentTile == tile }
+            }
+
         if (freeTiles.isEmpty()) return
 
         val tile = freeTiles.random()

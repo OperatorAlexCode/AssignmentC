@@ -23,9 +23,10 @@ import com.example.assignmentc.R
 import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
+import com.example.assignmentc.logic.Tile
 
 @Composable
-fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager, enemyManager: EnemyManager) {
+fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager, enemyManager: EnemyManager, trapTile: Tile?) {
     val dimension = 360.dp
     val margin = 0.dp
 
@@ -136,6 +137,16 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager
                                         modifier = Modifier.fillMaxSize(),
                                         filterQuality = FilterQuality.None)
                                 }
+                            }
+
+                            // draw trap if present
+                            if (trapTile?.XPos == x && trapTile.YPos == y) {   // --added
+                                Image(
+                                    bitmap = ImageBitmap.imageResource(R.drawable.trap),
+                                    contentDescription = "Trap",
+                                    modifier = Modifier.fillMaxSize(),
+                                    filterQuality = FilterQuality.None
+                                )
                             }
                         }
                     }

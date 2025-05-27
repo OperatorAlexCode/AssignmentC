@@ -4,8 +4,7 @@ import android.content.Context
 import com.example.assignmentc.logic.TrapManager
 import com.example.assignmentc.logic.Trap
 
-class EnemyManager(var context: Context, private val maze: Maze) {
-    private val trapManager = TrapManager(maze)
+class EnemyManager(var context: Context, private val maze: Maze, private val trapManager: TrapManager) {
     var enemies: MutableList<Enemy> = mutableListOf()
 
     fun spawnEnemies() {
