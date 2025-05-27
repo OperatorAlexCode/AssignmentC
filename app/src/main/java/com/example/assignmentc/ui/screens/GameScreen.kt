@@ -21,7 +21,6 @@ import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
 import com.example.assignmentc.logic.TrapManager
-import com.example.assignmentc.logic.Trap
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 

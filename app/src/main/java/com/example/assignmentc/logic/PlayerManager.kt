@@ -1,8 +1,6 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
-import com.example.assignmentc.logic.TrapManager
-import com.example.assignmentc.logic.Trap
 
 
 class PlayerManager(var context: Context, private val maze: Maze) {
