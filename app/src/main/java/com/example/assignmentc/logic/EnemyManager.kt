@@ -1,8 +1,11 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import com.example.assignmentc.logic.TrapManager
+import com.example.assignmentc.logic.Trap
 
 class EnemyManager(var context: Context, private val maze: Maze) {
+    private val trapManager = TrapManager(maze)
     var enemies: MutableList<Enemy> = mutableListOf()
 
     fun spawnEnemies() {
@@ -27,8 +30,16 @@ class EnemyManager(var context: Context, private val maze: Maze) {
     }
 
     fun moveAllEnemies() {
-        for (enemy in enemies) {
+        // Iterate over a snapshot so we can safely remove enemies as we go
+        for (enemy in enemies.toList()) {
+            // 1. Move the enemy
             enemy.move()
+
+            // 2. If it steps on a trap, kill it and clear the ground trap
+            if (trapManager.isOnGround(enemy.currentTile)) {
+                enemies.remove(enemy)
+                trapManager.clearGroundTrap()  // make sure you’ve added this to TrapManager
+            }
         }
     }
 

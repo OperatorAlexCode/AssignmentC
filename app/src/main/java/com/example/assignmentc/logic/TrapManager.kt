@@ -4,9 +4,9 @@ import kotlin.random.Random
 
 class TrapManager(
     private val maze: Maze,
-    private val spawnLifetime: Int = 8,   // turns before an unpicked trap expires
-    private val holdLifetime: Int = 5,    // turns the player can hold a trap
-    private val dropLifetime: Int = 5     // turns a dropped trap remains active
+    private val spawnLifetime: Int = 7,   // turns before an unpicked trap expires
+    private val holdLifetime: Int = 10,    // turns the player can hold a trap
+    private val dropLifetime: Int = 7     // turns a dropped trap remains active
 ) {
     private var activeTrap: Trap? = null
     private var heldTurnsRemaining: Int = 0
@@ -73,6 +73,10 @@ class TrapManager(
 
     fun getGroundTrapTile(): Tile? {
         return activeTrap?.tile
+    }
+
+    fun clearGroundTrap() {
+        activeTrap = null
     }
 
 }

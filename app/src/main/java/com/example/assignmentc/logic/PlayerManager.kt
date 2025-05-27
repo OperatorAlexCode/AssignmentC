@@ -1,8 +1,13 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import com.example.assignmentc.logic.TrapManager
+import com.example.assignmentc.logic.Trap
+
 
 class PlayerManager(var context: Context, private val maze: Maze) {
+    private val trapManager = TrapManager(maze)
+
     var player: Player? = null
     //var locationTile: Tile? = null
     var score: Int = 0
@@ -30,6 +35,22 @@ class PlayerManager(var context: Context, private val maze: Maze) {
         }
 
         player?.Update(direction)
+        player?.currentTile?.let { trapManager.tryPickUp(it) }
+    }
+
+    // true if the player currently holds a trap
+    fun canDropTrap(): Boolean {
+        return trapManager.isHeld()
+    }
+
+    // Drop the trap on the current tile if the player is holding one.
+    fun dropTrap() {
+        player?.currentTile?.let { trapManager.drop(it) }
+    }
+
+    // Advance all trap timers by one turn.
+    fun tickTurn() {
+        trapManager.tickAll()
     }
 
     fun getPlayerLocation() : Tile? {
