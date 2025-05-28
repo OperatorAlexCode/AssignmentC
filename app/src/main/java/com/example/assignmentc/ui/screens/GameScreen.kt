@@ -1,5 +1,6 @@
 package com.example.assignmentc.ui.screens
 
+import android.media.MediaPlayer
 import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
+import com.example.assignmentc.R
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
@@ -45,6 +47,8 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
     //val playerManager = viewModel.getPlayerManager()
     //val enemyManager = viewModel.getEnemyManager()
 
+    var walksfx = MediaPlayer.create(context,R.raw.footstep)
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
@@ -65,6 +69,11 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
                     //maze = maze.copySelf()
                     //gameManager.Update()
                     viewModel.movePlayer(direction)
+
+                    if (walksfx.isPlaying)
+                        walksfx.seekTo(0)
+                    else
+                        walksfx.start()
                 },
                 onShowLeaderboard = onNavigateToLeaderboard
             )
