@@ -7,6 +7,7 @@ import com.example.assignmentc.data.FirestoreRepository
 import com.example.assignmentc.data.ScoreEntry
 import com.example.assignmentc.data.ScoreRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -22,13 +23,19 @@ class LeaderboardViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow("")
+    val errorMessage = _errorMessage.asStateFlow()
+
+    fun clearError() { _errorMessage.value = "" }
+
     fun loadOnlineScores() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 _onlineScores.value = firestoreRepository.getAllScores()
             } catch (e: Exception) {
-                Log.d("Leaderboard", "Refresh failed", e)
+                _errorMessage.value = "Refresh failed: ${e.message}"
+                Log.e("Leaderboard", "Refresh failed", e)
             } finally {
                 _isLoading.value = false
             }
@@ -43,8 +50,14 @@ class LeaderboardViewModel(
 
     fun submitOnlineScore(name: String, score: Int) {
         viewModelScope.launch {
-            firestoreRepository.submitScore(name, score)
+            try {
+                firestoreRepository.submitScore(name, score)
+                // Refresh scores after successful submission
+                loadOnlineScores()
+            } catch (e: Exception) {
+                _errorMessage.value = "Submit failed: ${e.message}"
+                Log.e("Leaderboard", "Submit failed", e)
+            }
         }
     }
-
 }
