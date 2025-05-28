@@ -2,15 +2,21 @@ package com.example.assignmentc.logic
 
 import android.content.Context
 
-class GameManager(var context: Context, private val maze: Maze) {
+class GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
-    var EnemyManager = EnemyManager(context,maze,player)
+    var EnemyManager = EnemyManager(context,maze,this)
 
     var score: Int = 0
 
     fun StartGame() {
         spawnPlayer()
+        EnemyManager = EnemyManager(context,maze,this)
         EnemyManager.spawnEnemies()
+    }
+
+    fun StartGame(maze: Maze) {
+        this.maze = maze
+        StartGame()
     }
 
     fun Update() {

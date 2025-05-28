@@ -37,11 +37,13 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
     val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
     enemyManager.spawnEnemies()*/
 
-    val gameManager by remember { mutableStateOf(GameManager(context,maze)) }
-    gameManager.StartGame()
+    //val gameManager by remember { mutableStateOf(GameManager(context,maze)) }
+    //gameManager.StartGame()
+    val gameManager = viewModel.getGameManager()
+    //viewModel.StartGame(maze)
 
-    val playerManager = viewModel.getPlayerManager()
-    val enemyManager = viewModel.getEnemyManager()
+    //val playerManager = viewModel.getPlayerManager()
+    //val enemyManager = viewModel.getEnemyManager()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -59,9 +61,10 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
                     //maze = maze.copySelf()
                     //enemyManager.moveAllEnemies()
 
-                    gameManager.movePlayer(direction)
-                    maze = maze.copySelf()
-                    gameManager.Update()
+                    //gameManager.movePlayer(direction)
+                    //maze = maze.copySelf()
+                    //gameManager.Update()
+                    viewModel.movePlayer(direction)
                 },
                 onShowLeaderboard = onNavigateToLeaderboard
             )

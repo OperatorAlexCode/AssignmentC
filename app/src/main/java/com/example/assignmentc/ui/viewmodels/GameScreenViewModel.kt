@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.assignmentc.logic.Direction
 import com.example.assignmentc.logic.EnemyManager
+import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
@@ -17,25 +18,47 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
     private var _maze = mutableStateOf<Maze>(TempleMaze())
     val maze: State<Maze> = _maze
 
-    private val playerManager = PlayerManager(application, _maze.value)
-    private val enemyManager = EnemyManager(application, _maze.value, playerManager)
+    //private val playerManager = PlayerManager(application, _maze.value)
+    //private val enemyManager = EnemyManager(application, _maze.value, playerManager)
+
+    private val gameManager = GameManager(application, _maze.value)
 
     init {
-        playerManager.spawnPlayer()
-        enemyManager.spawnEnemies()
+        //playerManager.spawnPlayer()
+        //enemyManager.spawnEnemies()
+        StartGame()
     }
 
+    fun StartGame() {
+        gameManager.StartGame(_maze.value)
+    }
+
+    fun StartGame(mazeToPlay: Maze) {
+        _maze.value = mazeToPlay
+        gameManager.StartGame(_maze.value)
+    }
+
+
+    /*fun EndGame() {
+        gameManager.EndGame()
+    }*/
+
     fun movePlayer(direction: Direction) {
-        playerManager.movePlayer(direction)
+        /*playerManager.movePlayer(direction)
         _maze.value = _maze.value.copySelf()
         val playerTile = playerManager.player?.currentTile
         if (playerTile != null) {
             enemyManager.moveAllEnemies()
-        }
+        }*/
+
+        gameManager.movePlayer(direction)
+        _maze.value = _maze.value.copySelf()
+        gameManager.Update()
     }
 
-    fun getPlayerManager(): PlayerManager = playerManager
-    fun getEnemyManager(): EnemyManager = enemyManager
+    //fun getPlayerManager(): PlayerManager = playerManager
+    //fun getEnemyManager(): EnemyManager = enemyManager
+    fun getGameManager(): GameManager = gameManager
 }
 
 class GameScreenViewModelFactory(private val application: Application): ViewModelProvider.Factory {

@@ -15,7 +15,7 @@ class Enemy(var context: Context, var currentTile: Tile) {
             if (direction != null) {
                 currentTile = nextTile
                 Animation.Update(direction.ordinal)
-                break
+                return
             }
         }
     }

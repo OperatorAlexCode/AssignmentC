@@ -2,11 +2,11 @@ package com.example.assignmentc.logic
 
 import android.content.Context
 
-class EnemyManager(private var context: Context,private val maze: Maze, var player: Player?) {
+class EnemyManager(private var context: Context,private val maze: Maze, var gameManager: GameManager) {
     var enemies: MutableList<Enemy> = mutableListOf()
 
     fun spawnEnemies() {
-        val nonWallOrPlayerTiles = maze.Tiles.flatten().filter { !it.IsWall && player?.currentTile != it }
+        val nonWallOrPlayerTiles = maze.Tiles.flatten().filter { !it.IsWall && gameManager.player?.currentTile != it }
         val spawnTiles = nonWallOrPlayerTiles.shuffled().take(3)
 
         for (tile in spawnTiles) {
@@ -27,7 +27,13 @@ class EnemyManager(private var context: Context,private val maze: Maze, var play
     }
 
     fun moveAllEnemies() {
-        val playerTile = playerManager.player?.currentTile ?: return
+        /*val playerTile = playerManager.player?.currentTile ?: return
+        for (enemy in enemies) {
+            enemy.move(playerTile)
+        }*/
+
+        val playerTile = gameManager.player?.currentTile ?: return
+
         for (enemy in enemies) {
             enemy.move(playerTile)
         }
