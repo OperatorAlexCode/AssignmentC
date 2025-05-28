@@ -21,11 +21,12 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import com.example.assignmentc.R
 import com.example.assignmentc.logic.EnemyManager
+import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 
 @Composable
-fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager, enemyManager: EnemyManager) {
+fun MazeDisplay(modifier: Modifier,toDisplay: Maze, gameManager: GameManager/*playerManager: PlayerManager, enemyManager: EnemyManager*/) {
     val dimension = 360.dp
     val margin = 0.dp
 
@@ -116,9 +117,9 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager
                                 filterQuality = FilterQuality.None)
 
                             // Draw other sprites here
-                            if (playerManager.isOnTile(x,y))
+                            if (gameManager.isPlayerOnTile(x,y))
                             {
-                                playerManager.player?.let {
+                                gameManager.player?.let {
                                     Image(bitmap = it.GetSprite().asImageBitmap(),
                                         contentDescription = "",
                                         modifier = Modifier.fillMaxSize(),
@@ -126,9 +127,9 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze, playerManager: PlayerManager
                                 }
                             }
 
-                            else if (enemyManager.enemies.any { e -> e.isOnTile(x,y) })
+                            else if (gameManager.isEnemyOnTile(x,y))
                             {
-                                var enemy = enemyManager.enemies.find { e -> e.isOnTile(x,y) }
+                                var enemy = gameManager.getEnemyOnTile(x,y)
 
                                 enemy?.let {
                                     Image(bitmap = it.Animation.GetSprite().asImageBitmap(),

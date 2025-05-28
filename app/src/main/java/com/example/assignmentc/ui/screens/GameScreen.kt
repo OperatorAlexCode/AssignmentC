@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.assignmentc.logic.EnemyManager
+import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
@@ -27,10 +28,13 @@ import com.example.assignmentc.ui.components.MovementButtons
 fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
     var context = LocalContext.current
     var maze: Maze by remember { mutableStateOf(TempleMaze()) }
-    val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
+    /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
     playerManager.spawnPlayer()
     val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
-    enemyManager.spawnEnemies()
+    enemyManager.spawnEnemies()*/
+
+    val gameManager by remember { mutableStateOf(GameManager(context,maze)) }
+    gameManager.StartGame()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -40,13 +44,17 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            MazeDisplay(Modifier.padding(16.dp), maze,playerManager,enemyManager)
+            MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
             Spacer(modifier = Modifier.height(30.dp))
             MovementButtons(
                 onMove = { direction ->
-                    playerManager.movePlayer(direction)
+                    //playerManager.movePlayer(direction)
+                    //maze = maze.copySelf()
+                    //enemyManager.moveAllEnemies()
+
+                    gameManager.movePlayer(direction)
                     maze = maze.copySelf()
-                    enemyManager.moveAllEnemies()
+                    gameManager.Update()
                 },
                 onShowLeaderboard = onNavigateToLeaderboard
             )
