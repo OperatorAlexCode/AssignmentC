@@ -1,5 +1,6 @@
 package com.example.assignmentc.ui.screens
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,21 +17,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
+import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
+import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
 
 @Composable
-fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
-    var context = LocalContext.current
-    var maze: Maze by remember { mutableStateOf(TempleMaze()) }
-    val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
-    playerManager.spawnPlayer()
-    val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
-    enemyManager.spawnEnemies()
+fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewModel = viewModel(factory = GameScreenViewModelFactory(LocalContext.current.applicationContext as Application))) {
+    val maze by viewModel.maze
+    val playerManager = viewModel.getPlayerManager()
+    val enemyManager = viewModel.getEnemyManager()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -44,9 +45,7 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit) {
             Spacer(modifier = Modifier.height(30.dp))
             MovementButtons(
                 onMove = { direction ->
-                    playerManager.movePlayer(direction)
-                    maze = maze.copySelf()
-                    enemyManager.moveAllEnemies()
+                    viewModel.movePlayer(direction)
                 },
                 onShowLeaderboard = onNavigateToLeaderboard
             )

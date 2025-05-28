@@ -4,13 +4,14 @@ import android.content.Context
 
 class PlayerManager(var context: Context, private val maze: Maze) {
     var player: Player? = null
+
     //var locationTile: Tile? = null
     var score: Int = 0
 
     fun spawnPlayer() {
         //val nonWallTiles = maze.Tiles.flatten().filter { !it.IsWall }
         //locationTile = maze.Tiles[0][0]
-        player = Player(context,maze.Tiles[0][0])
+        player = Player(context, maze.Tiles[0][0])
     }
 
     fun movePlayer(direction: Direction) {
@@ -30,10 +31,6 @@ class PlayerManager(var context: Context, private val maze: Maze) {
         }
 
         player?.Update(direction)
-    }
-
-    fun getPlayerLocation() : Tile? {
-        return player?.currentTile
     }
 
     fun isOnTile(x:Int,y:Int): Boolean {

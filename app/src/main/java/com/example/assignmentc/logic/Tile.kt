@@ -28,6 +28,17 @@ class Tile {
             Direction.West -> return WestTile
         }
     }
+
+    fun directionTo(other: Tile): Direction? {
+        return when {
+            NorthTile == other -> Direction.North
+            SouthTile == other -> Direction.South
+            EastTile == other -> Direction.East
+            WestTile == other -> Direction.West
+            else -> null
+        }
+    }
+
 }
 
 enum class Direction {

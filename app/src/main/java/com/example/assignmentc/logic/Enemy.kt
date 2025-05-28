@@ -8,18 +8,18 @@ import com.example.assignmentc.R
 class Enemy(var context: Context, var currentTile: Tile) {
     var Animation: EntityAnimation = EntityAnimation(context,R.drawable.enemy)
 
-    fun move() {
-        val directions = Direction.entries.shuffled()
-
-        for (direction in directions) {
-            val nextTile = currentTile.GetTile(direction)
-            if (nextTile != null) {
+    fun move(playerTile: Tile) {
+        val path = EnemyManager.findPath(currentTile, playerTile)
+        if (path != null && path.size > 1) {
+            val nextTile = path[1] // 0 = current position, 1 = next step
+            val direction = currentTile.directionTo(nextTile)
+            if (direction != null) {
                 currentTile = nextTile
                 Animation.Update(direction)
-                break
             }
         }
     }
+
 
     fun getLocationTile(): Tile {
         return currentTile
