@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmentc.logic.EnemyManager
+import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
@@ -29,7 +30,16 @@ import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
 
 @Composable
 fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewModel = viewModel(factory = GameScreenViewModelFactory(LocalContext.current.applicationContext as Application))) {
+    var context = LocalContext.current
     val maze by viewModel.maze
+    /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
+    playerManager.spawnPlayer()
+    val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
+    enemyManager.spawnEnemies()*/
+
+    val gameManager by remember { mutableStateOf(GameManager(context,maze)) }
+    gameManager.StartGame()
+
     val playerManager = viewModel.getPlayerManager()
     val enemyManager = viewModel.getEnemyManager()
 
@@ -41,11 +51,17 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            MazeDisplay(Modifier.padding(16.dp), maze,playerManager,enemyManager)
+            MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
             Spacer(modifier = Modifier.height(30.dp))
             MovementButtons(
                 onMove = { direction ->
-                    viewModel.movePlayer(direction)
+                    //playerManager.movePlayer(direction)
+                    //maze = maze.copySelf()
+                    //enemyManager.moveAllEnemies()
+
+                    gameManager.movePlayer(direction)
+                    maze = maze.copySelf()
+                    gameManager.Update()
                 },
                 onShowLeaderboard = onNavigateToLeaderboard
             )

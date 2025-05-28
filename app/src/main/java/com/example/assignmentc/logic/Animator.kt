@@ -4,13 +4,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 
-class EntityAnimation {
+class Animator {
     var CurrentContext: Context
     var SpriteSheet: Bitmap
     var SheetRows: Int = 4
     var SheetColumns: Int = 2
-    var AnimationState: Int = 0
-    var MoveDirection: Direction = Direction.North
+    var CurrentFrame: Int = 0
+    var CurrentState: Int = 0
 
     constructor(context:Context, imageResource:Int) {
         CurrentContext = context
@@ -25,11 +25,11 @@ class EntityAnimation {
     }
 
     fun Update() {
-        AnimationState = (AnimationState + 1) % SheetColumns
+        CurrentFrame = (CurrentFrame + 1) % SheetColumns
     }
 
-    fun Update(newDirection: Direction) {
-        MoveDirection = newDirection
+    fun Update(currentState:Int) {
+        CurrentState = currentState
         Update()
     }
 
@@ -39,8 +39,8 @@ class EntityAnimation {
 
         val sprite = Bitmap.createBitmap(
             SpriteSheet,
-            width * AnimationState,
-            height * MoveDirection.ordinal,
+            width * CurrentFrame,
+            height * CurrentState,
             width,
             height
         )

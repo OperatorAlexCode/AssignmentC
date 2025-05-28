@@ -2,11 +2,31 @@ package com.example.assignmentc.logic
 
 import android.content.Context
 
-class PlayerManager(var context: Context, private val maze: Maze) {
+class GameManager(var context: Context, private val maze: Maze) {
     var player: Player? = null
+    var EnemyManager = EnemyManager(context,maze,player)
 
-    //var locationTile: Tile? = null
     var score: Int = 0
+
+    fun StartGame() {
+        spawnPlayer()
+        EnemyManager.spawnEnemies()
+    }
+
+    fun Update() {
+        player?.health?.let {
+            if (it <= 0)
+            {
+                EndGame()
+                return
+            }
+        }
+
+        EnemyManager.moveAllEnemies()
+    }
+
+    fun EndGame() {
+    }
 
     fun spawnPlayer() {
         //val nonWallTiles = maze.Tiles.flatten().filter { !it.IsWall }
@@ -33,7 +53,11 @@ class PlayerManager(var context: Context, private val maze: Maze) {
         player?.Update(direction)
     }
 
-    fun isOnTile(x:Int,y:Int): Boolean {
+    fun getPlayerLocation() : Tile? {
+        return player?.currentTile
+    }
+
+    fun isPlayerOnTile(x:Int,y:Int): Boolean {
         var output = false
 
         player?.let {
@@ -41,5 +65,17 @@ class PlayerManager(var context: Context, private val maze: Maze) {
         }
 
         return output
+    }
+
+    fun isEnemyOnTile(x:Int,y:Int):Boolean {
+        return EnemyManager.enemies.any { e -> e.isOnTile(x,y) }
+    }
+
+    fun getEnemyOnTile(x:Int,y:Int): Enemy? {
+        return EnemyManager.enemies.find { e -> e.isOnTile(x,y) }
+    }
+
+    fun increaseScore(gainedScore:Int) {
+        score += gainedScore
     }
 }
