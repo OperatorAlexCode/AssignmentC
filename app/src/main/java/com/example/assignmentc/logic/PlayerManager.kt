@@ -10,7 +10,7 @@ class PlayerManager(var context: Context, private val maze: Maze) {
     fun spawnPlayer() {
         //val nonWallTiles = maze.Tiles.flatten().filter { !it.IsWall }
         //locationTile = maze.Tiles[0][0]
-        player = Player(context,maze.Tiles[0][0])
+        player = Player(context,maze.Tiles[maze.PlayerStart.XPos][maze.PlayerStart.YPos])
     }
 
     fun movePlayer(direction: Direction) {

@@ -2,11 +2,10 @@ package com.example.assignmentc.logic
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.animation.core.Animation
 import com.example.assignmentc.R
 
 class Enemy(var context: Context, var currentTile: Tile) {
-    var Animation: EntityAnimation = EntityAnimation(context,R.drawable.enemy)
+    var Animation: Animator = Animator(context,R.drawable.enemy)
 
     fun move() {
         val directions = Direction.entries.shuffled()
@@ -15,7 +14,7 @@ class Enemy(var context: Context, var currentTile: Tile) {
             val nextTile = currentTile.GetTile(direction)
             if (nextTile != null) {
                 currentTile = nextTile
-                Animation.Update(direction)
+                Animation.Update(direction.ordinal)
                 break
             }
         }

@@ -10,8 +10,7 @@ open class Maze {
     // 0, Height-1 is the lower left corner and
     // Width-1, Height-1 is the lower right corner
     var Tiles: Array<Array<Tile>> = Array(Size) { emptyArray() }
-    var player: Player? = null
-    var enemies: MutableList<Enemy> = mutableListOf()
+    open var PlayerStart:Tile = Tile(Size/2,Size/2,false)
 
     constructor() {
         Construct()
@@ -28,8 +27,6 @@ open class Maze {
     constructor(toCopy: Maze) {
         Size = toCopy.Size
         Tiles = toCopy.Tiles
-        player = toCopy.player
-        enemies = toCopy.enemies
     }
 
     // Default constructor that is used to create the maze using a given instruction
