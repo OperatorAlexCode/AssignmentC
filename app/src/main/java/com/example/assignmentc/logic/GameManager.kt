@@ -2,7 +2,7 @@ package com.example.assignmentc.logic
 
 import android.content.Context
 
-class GameManager(var context: Context, private var maze: Maze) {
+class  GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
     var EnemyManager = EnemyManager(context,maze,this)
 
