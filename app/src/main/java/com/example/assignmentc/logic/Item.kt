@@ -1,9 +1,5 @@
 package com.example.assignmentc.logic
 
-import com.example.assignmentc.logic.Enemy
-import com.example.assignmentc.logic.GameManager
-import com.example.assignmentc.logic.Tile
-
 sealed class Item(
     /** Which Tile this item currently “occupies” in the maze */
     open var tile: Tile

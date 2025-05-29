@@ -1,10 +1,6 @@
 package com.example.assignmentc.logic
 
 import com.example.assignmentc.R
-import com.example.assignmentc.logic.Item
-import com.example.assignmentc.logic.Enemy
-import com.example.assignmentc.logic.GameManager
-import com.example.assignmentc.logic.Tile
 
 class TrapItem(
     override var tile: Tile

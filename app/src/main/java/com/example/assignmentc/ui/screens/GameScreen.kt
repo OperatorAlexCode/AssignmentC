@@ -75,6 +75,7 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
                     else
                         walksfx.start()
                 },
+                onUseItem = {viewModel.useItem()},
                 onShowLeaderboard = onNavigateToLeaderboard
             )
         }

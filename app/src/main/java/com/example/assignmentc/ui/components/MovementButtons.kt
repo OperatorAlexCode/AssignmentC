@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 fun MovementButtons(
     modifier: Modifier = Modifier,
     onMove: (Direction) -> Unit,
+    onUseItem: () -> Unit,
     onShowLeaderboard: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -131,6 +133,14 @@ fun MovementButtons(
                 contentDescription = "South",
                 filterQuality = FilterQuality.None,
                 /*colorFilter = buttonColor*/)
+        }
+
+        Button(
+            modifier = Modifier
+                .padding(top = 8.dp),
+            onClick = onUseItem
+        ) {
+            Text("Use Item")
         }
 
         Button(

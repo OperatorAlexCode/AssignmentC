@@ -18,6 +18,7 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
     private var _maze = mutableStateOf<Maze>(TempleMaze())
     val maze: State<Maze> = _maze
 
+
     //private val playerManager = PlayerManager(application, _maze.value)
     //private val enemyManager = EnemyManager(application, _maze.value, playerManager)
 
@@ -53,8 +54,16 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
 
         gameManager.movePlayer(direction)
         _maze.value = _maze.value.copySelf()
-        gameManager.Update()
+        gameManager.Update(1000L)
     }
+
+    fun useItem() {
+        gameManager.useHeldItem()
+        // Trigger a re-draw
+        _maze.value = gameManager.currentMaze.copySelf()
+    }
+
+    val onUseItem = { useItem() }
 
     //fun getPlayerManager(): PlayerManager = playerManager
     //fun getEnemyManager(): EnemyManager = enemyManager
