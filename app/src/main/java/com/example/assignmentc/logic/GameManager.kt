@@ -45,7 +45,10 @@ class  GameManager(var context: Context, private var maze: Maze) {
                 .firstOrNull { it.tile == enemy.currentTile && it.isPlaced }
             if (placedItem != null) {
                 placedItem.onTrigger(this, enemy)
-                itemManager.remove(placedItem)
+                // Only clear immediate for traps, not bombs
+                if (placedItem is TrapItem) {
+                    itemManager.remove(placedItem)
+                }
             }
         }
 
