@@ -1,6 +1,7 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import kotlin.random.Random
 
 class  GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
@@ -9,14 +10,14 @@ class  GameManager(var context: Context, private var maze: Maze) {
         get() = maze
     var score: Int = 0
 
-    val itemManager = ItemManager(maze)
+    val itemManager = ItemManager(maze, context)
 
-    // Added here ▶ Spawn timing & cap for items
-    private val spawnIntervalMs = 5_000L   // Added here
-    private var spawnAccumulatorMs = 0L     // Added here
-    private val maxGroundItems = 5         // Added here
+    // Spawn timing & cap for items
+    private val spawnIntervalMs = 5_000L  // 5 seconds = 5 turns
+    private var spawnAccumulatorMs = 0L
+    private val maxGroundItems = 5
 
-    var heldItem: Item? = null             // ← Don't forget this
+    var heldItem: Item? = null
 
     fun StartGame() {
         spawnPlayer()
@@ -30,20 +31,15 @@ class  GameManager(var context: Context, private var maze: Maze) {
     }
 
     fun Update(deltaTimeMs: Long) {
-        // 1) Health check
         player?.health?.takeIf { it <= 0 }?.also {
             EndGame()
             return
         }
-
-        // 2) Spawn timer
         spawnAccumulatorMs += deltaTimeMs
         trySpawnItem()
 
-        // 3) Enemy movement
         EnemyManager.moveAllEnemies()
 
-        // 4) (Phase 3) Trigger detection will go here…
         for (enemy in EnemyManager.enemies.toList()) {
             val placedItem = itemManager.items
                 .firstOrNull { it.tile == enemy.currentTile && it.isPlaced }
@@ -52,6 +48,15 @@ class  GameManager(var context: Context, private var maze: Maze) {
                 itemManager.remove(placedItem)
             }
         }
+
+        // tick all bombs and clean up finished explosions
+        val toRemove = mutableListOf<Item>()
+        itemManager.items.forEach { item ->
+            if (item is BombItem && item.update()) {
+                toRemove += item
+            }
+        }
+        toRemove.forEach { itemManager.remove(it) }
     }
 
     private fun trySpawnItem() {
@@ -59,7 +64,11 @@ class  GameManager(var context: Context, private var maze: Maze) {
         val groundCount = itemManager.items.count { !it.isPlaced }
         if (spawnAccumulatorMs >= spawnIntervalMs && groundCount < maxGroundItems) {
             val tile = chooseSpawnTile()
-            itemManager.spawnTrap(tile)
+            if (Random.nextBoolean()) {
+                itemManager.spawnTrap(tile)
+            } else {
+                itemManager.spawnBomb(tile)
+            }
             spawnAccumulatorMs = 0L
         }
     }
@@ -115,19 +124,15 @@ class  GameManager(var context: Context, private var maze: Maze) {
 
     /**
      * Called by UI when the player “uses” their held item.
-     * Plants the trap at the player’s current tile and
+     * Plants the item at the player’s current tile and
      * moves it out of heldItem into itemManager’s placed list.
      */
     fun useHeldItem() {
-        // Only TrapItems for now
-        val item = heldItem as? TrapItem ?: return
-
-        // Plant it under the player
-        player?.currentTile?.let { item.place(it) }
-
-        // Add it back into the world as a placed item
-        itemManager._items += item     // or call a dedicated spawnPlaced()
-        heldItem = null
+        heldItem?.let { item ->
+            player?.currentTile?.let { item.place(it) }
+            itemManager._items += item
+            heldItem = null
+        }
     }
 
     fun getPlayerLocation() : Tile? {

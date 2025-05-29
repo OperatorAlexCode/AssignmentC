@@ -5,11 +5,11 @@ import com.example.assignmentc.R
 class TrapItem(
     override var tile: Tile
 ) : Item(tile) {
-    /** Flip to true once the player “plants” the trap. */
+    // Flip to true once the player Uses the trap.
     private var placed: Boolean = false
     override val isPlaced: Boolean get() = placed
 
-    /** Draw banana on ground, peel when placed. */
+    // Draw banana on ground, peel when placed.
     override fun spriteRes(): Int =
         if (!placed) R.drawable.banana else R.drawable.banana_peel
 
@@ -25,7 +25,7 @@ class TrapItem(
     }
 
     /** Helper for when the player “uses” the picked-up trap */
-    fun place(on: Tile) {
+    override fun place(on: Tile) {
         tile = on
         placed = true
     }

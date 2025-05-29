@@ -23,6 +23,8 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
     //private val enemyManager = EnemyManager(application, _maze.value, playerManager)
 
     private val gameManager = GameManager(application, _maze.value)
+    private val _hasHeldItem = mutableStateOf(gameManager.heldItem != null)
+    val hasHeldItem: State<Boolean> = _hasHeldItem
 
     init {
         //playerManager.spawnPlayer()
@@ -55,12 +57,15 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
         gameManager.movePlayer(direction)
         _maze.value = _maze.value.copySelf()
         gameManager.Update(1000L)
+        _hasHeldItem.value = (gameManager.heldItem != null)
     }
 
     fun useItem() {
         gameManager.useHeldItem()
         // Trigger a re-draw
         _maze.value = gameManager.currentMaze.copySelf()
+        // update enabled state
+        _hasHeldItem.value = (gameManager.heldItem != null)
     }
 
     val onUseItem = { useItem() }

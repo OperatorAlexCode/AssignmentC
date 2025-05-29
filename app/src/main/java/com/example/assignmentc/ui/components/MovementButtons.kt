@@ -47,7 +47,8 @@ fun MovementButtons(
     modifier: Modifier = Modifier,
     onMove: (Direction) -> Unit,
     onUseItem: () -> Unit,
-    onShowLeaderboard: () -> Unit
+    onShowLeaderboard: () -> Unit,
+    useEnabled: Boolean
 ) {
     val scope = rememberCoroutineScope()
     val buttons: Bitmap = BitmapFactory.decodeResource(LocalContext.current.resources,R.drawable.buttons)
@@ -138,7 +139,8 @@ fun MovementButtons(
         Button(
             modifier = Modifier
                 .padding(top = 8.dp),
-            onClick = onUseItem
+            onClick = onUseItem,
+            enabled = useEnabled
         ) {
             Text("Use Item")
         }
