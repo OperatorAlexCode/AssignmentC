@@ -51,7 +51,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaderboardScreen(
-    onBack: () -> Unit
+    onGoToMenu: () -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: LeaderboardViewModel = viewModel(
@@ -229,7 +229,7 @@ fun LeaderboardScreen(
                 }
 
                 Button(
-                    onClick = onBack,
+                    onClick = onGoToMenu,
                     modifier = Modifier
                         .weight(1f)
                 ) {

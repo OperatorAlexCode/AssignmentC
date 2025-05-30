@@ -17,13 +17,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
 
 @Composable
-fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewModel = viewModel(factory = GameScreenViewModelFactory(LocalContext.current.applicationContext as Application))) {
+fun GameScreen(
+    onNavigateToLeaderboard: () -> Unit,
+    initialMaze: Maze,
+    viewModel: GameScreenViewModel = viewModel(
+        factory = GameScreenViewModelFactory(
+            LocalContext.current.applicationContext as Application,
+            initialMaze
+        )
+    )
+) {
     var context = LocalContext.current
     val maze by viewModel.maze
     /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }

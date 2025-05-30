@@ -7,13 +7,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.assignmentc.logic.Direction
-import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
-import com.example.assignmentc.logic.PlayerManager
 import com.example.assignmentc.logic.TempleMaze
 
-class GameScreenViewModel(application: Application) : AndroidViewModel(application) {
+class GameScreenViewModel(
+    application: Application,
+    initialMaze: Maze
+) : AndroidViewModel(application) {
 
     private var _maze = mutableStateOf<Maze>(TempleMaze())
     val maze: State<Maze> = _maze
@@ -32,12 +33,6 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
     fun StartGame() {
         gameManager.StartGame(_maze.value)
     }
-
-    fun StartGame(mazeToPlay: Maze) {
-        _maze.value = mazeToPlay
-        gameManager.StartGame(_maze.value)
-    }
-
 
     /*fun EndGame() {
         gameManager.EndGame()
@@ -61,11 +56,14 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
     fun getGameManager(): GameManager = gameManager
 }
 
-class GameScreenViewModelFactory(private val application: Application): ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+class GameScreenViewModelFactory(
+    private val application: Application,
+    private val initialMaze: Maze
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameScreenViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return GameScreenViewModel(application) as T
+            return GameScreenViewModel(application, initialMaze) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
