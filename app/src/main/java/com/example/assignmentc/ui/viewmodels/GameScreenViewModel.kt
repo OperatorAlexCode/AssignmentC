@@ -9,14 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.assignmentc.logic.Direction
 import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
-import com.example.assignmentc.logic.TempleMaze
 
 class GameScreenViewModel(
     application: Application,
     initialMaze: Maze
 ) : AndroidViewModel(application) {
 
-    private var _maze = mutableStateOf<Maze>(TempleMaze())
+    private var _maze = mutableStateOf<Maze>(initialMaze)
     val maze: State<Maze> = _maze
 
     //private val playerManager = PlayerManager(application, _maze.value)
@@ -27,10 +26,10 @@ class GameScreenViewModel(
     init {
         //playerManager.spawnPlayer()
         //enemyManager.spawnEnemies()
-        StartGame()
+        startGame()
     }
 
-    fun StartGame() {
+    fun startGame() {
         gameManager.StartGame(_maze.value)
     }
 
