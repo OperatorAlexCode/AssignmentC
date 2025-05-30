@@ -24,6 +24,9 @@ import com.example.assignmentc.ui.viewmodels.MazePickerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.GameManager
+import com.example.assignmentc.logic.Player
+import com.example.assignmentc.ui.components.MazeDisplay
 
 @Composable
 fun MazePickerScreen(
@@ -41,35 +44,42 @@ fun MazePickerScreen(
     }
     val currentMazeIndex = viewModel.currentMazeIndex
     val currentMaze = mazeTypes[currentMazeIndex].first
-    val mazeName = mazeTypes[currentMazeIndex].second
+
+    // Create a dummy GameManager for preview purposes
+    val dummyGameManager = remember(currentMaze) {
+        GameManager(context, currentMaze).apply {
+            player = Player(context, currentMaze.Tiles[currentMaze.Size / 2][currentMaze.Size / 2])
+        }
+    }
 
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "Select Maze",
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Maze preview (simplified version)
-            Box(
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Maze preview display
+            MazePreviewDisplay(
                 modifier = Modifier
-                    .size(200.dp)
-                    .background(Color.LightGray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = mazeName, style = MaterialTheme.typography.titleLarge)
-            }
+                    .size(300.dp)
+                    .background(Color(0xFF333333)),
+                maze = currentMaze,
+                gameManager = dummyGameManager
+            )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Maze navigation arrows
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(32.dp)
@@ -81,9 +91,8 @@ fun MazePickerScreen(
                 ArrowButton(direction = Direction.East, onClick = { viewModel.nextMaze(mazeTypes.size) })
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Action buttons
             Row(
                 horizontalArrangement = Arrangement.spacedBy(24.dp)
             ) {
@@ -101,6 +110,21 @@ fun MazePickerScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MazePreviewDisplay(
+    modifier: Modifier,
+    maze: Maze,
+    gameManager: GameManager
+) {
+    Box(modifier = modifier) {
+        MazeDisplay(
+            modifier = Modifier.fillMaxSize(),
+            toDisplay = maze,
+            gameManager = gameManager
+        )
     }
 }
 
