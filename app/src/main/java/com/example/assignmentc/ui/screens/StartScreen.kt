@@ -29,71 +29,56 @@ fun StartScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f)
+            Text(
+                text = stringResource(id = R.string.app_name),
+                fontSize = 48.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth()
+            )
+
+            PlayerSprite(Modifier.size(200.dp))
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Button(
+                onClick = onStartGame,
+                modifier = Modifier.width(200.dp),
+                elevation = ButtonDefaults.buttonElevation(8.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.app_name),
-                    fontSize = 48.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(top = 50.dp)
-                        .fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                PlayerSprite()
+                Text("Play")
             }
 
-            // Buttons in center
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(bottom = 50.dp)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = onShowLeaderboard,
+                modifier = Modifier.width(200.dp),
+                elevation = ButtonDefaults.buttonElevation(8.dp)
             ) {
-                Button(
-                    onClick = onStartGame,
-                    modifier = Modifier.width(200.dp),
-                    elevation = ButtonDefaults.buttonElevation(8.dp)
-                ) {
-                    Text("Start Game")
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Button(
-                    onClick = onShowLeaderboard,
-                    modifier = Modifier.width(200.dp),
-                    elevation = ButtonDefaults.buttonElevation(8.dp)
-                ) {
-                    Text("Leaderboard")
-                }
+                Text("Leaderboard")
             }
         }
     }
 }
 
 @Composable
-fun PlayerSprite() {
+fun PlayerSprite(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val bitmap = remember {
-        // Decode the sprite sheet
         val spriteSheet = BitmapFactory.decodeResource(context.resources, R.drawable.player)
         val rows = 4
         val columns = 2
-
-        // Calculate frame dimensions
         val frameWidth = spriteSheet.width / columns
         val frameHeight = spriteSheet.height / rows
 
-        // Extract the specific frame (third row = index 2, second column = index 1)
         Bitmap.createBitmap(
             spriteSheet,
-            frameWidth * 1,  // X coordinate (second column)
-            frameHeight * 2,  // Y coordinate (third row)
+            frameWidth * 1,
+            frameHeight * 2,
             frameWidth,
             frameHeight
         )
@@ -102,7 +87,7 @@ fun PlayerSprite() {
     Image(
         bitmap = bitmap.asImageBitmap(),
         contentDescription = "Player Character",
-        modifier = Modifier.size(100.dp),
+        modifier = modifier,
         contentScale = ContentScale.Fit
     )
 }

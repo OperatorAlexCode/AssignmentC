@@ -233,7 +233,7 @@ fun LeaderboardScreen(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    Text("Back to Game")
+                    Text("Start Menu")
                 }
             }
         }

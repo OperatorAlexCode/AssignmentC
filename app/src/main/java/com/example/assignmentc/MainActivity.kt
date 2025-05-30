@@ -44,7 +44,7 @@ fun MazeNavigationApp() {
             )
         }
         composable(Screen.Leaderboard.route) {
-            LeaderboardScreen(onBack = { navController.popBackStack() })
+            LeaderboardScreen(onBack = { navController.navigate(Screen.Start.route) })
         }
     }
 }
