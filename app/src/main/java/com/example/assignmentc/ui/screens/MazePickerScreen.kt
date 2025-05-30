@@ -115,10 +115,14 @@ fun ArrowButton(
     val buttonSize = 50.dp
     val scope = rememberCoroutineScope()
 
+    // Define base offsets for frame index computation
+    val LEFT_ARROW_BASE_OFFSET = 1
+    val RIGHT_ARROW_BASE_OFFSET = 1
+
     // Get the correct frame based on direction
     val frameIndex = when(direction) {
-        Direction.West -> 1 + Direction.West.ordinal  // Left arrow
-        Direction.East -> 1 + Direction.East.ordinal  // Right arrow
+        Direction.West -> LEFT_ARROW_BASE_OFFSET + Direction.West.ordinal  // Left arrow
+        Direction.East -> RIGHT_ARROW_BASE_OFFSET + Direction.East.ordinal  // Right arrow
         else -> 0
     }
 
