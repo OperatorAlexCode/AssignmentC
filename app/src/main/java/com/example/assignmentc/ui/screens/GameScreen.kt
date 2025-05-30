@@ -11,27 +11,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.assignmentc.logic.EnemyManager
-import com.example.assignmentc.logic.GameManager
-import com.example.assignmentc.logic.Maze
-import com.example.assignmentc.logic.PlayerManager
-import com.example.assignmentc.logic.TempleMaze
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
 
 @Composable
-fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewModel = viewModel(factory = GameScreenViewModelFactory(LocalContext.current.applicationContext as Application))) {
+fun GameScreen(
+    onNavigateToLeaderboard: () -> Unit,
+    initialMaze: Maze,
+    viewModel: GameScreenViewModel = viewModel(
+        factory = GameScreenViewModelFactory(
+            LocalContext.current.applicationContext as Application,
+            initialMaze
+        )
+    )
+) {
     var context = LocalContext.current
     val maze by viewModel.maze
     /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
