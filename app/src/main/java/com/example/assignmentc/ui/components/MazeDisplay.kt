@@ -26,47 +26,90 @@ import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
 
 @Composable
-fun MazeDisplay(modifier: Modifier,toDisplay: Maze, gameManager: GameManager/*playerManager: PlayerManager, enemyManager: EnemyManager*/) {
+fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
     val dimension = 360.dp
     val margin = 0.dp
 
-    /*Box(modifier = modifier.size(dimension)) {
-        LazyColumn(modifier = Modifier.fillMaxSize(),
+    Box(modifier = modifier.size(dimension)) {
+        Column(modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(margin),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            items(toDisplay.Tiles) { row ->
-                LazyRow(modifier = Modifier.fillMaxSize(),
+            // Upper border
+            Row(modifier = Modifier.fillMaxSize().weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(margin),
+                verticalAlignment = Alignment.CenterVertically) {
+
+                for (x in 0..toDisplay.Size+1){
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
+                }
+            }
+
+            for (y in 0..<toDisplay.Size)
+            {
+                Row(modifier = Modifier.fillMaxSize().weight(1f),
                     horizontalArrangement = Arrangement.spacedBy(margin),
-                    verticalAlignment = Alignment.CenterVertically)
-                {
-                    items(row)
-                    { item ->
-                        var tileColor = Color(0xFFBDBDBD)
+                    verticalAlignment = Alignment.CenterVertically) {
 
-                        if (item.IsWall)
-                            tileColor = Color(0xFF3D3D3D)
+                    // Border Left
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
 
-                        /*Box(modifier = Modifier.size(20.dp).drawWithCache {
-                            val tile = RoundedPolygon(
-                                numVertices = 4,
-                                radius = size.minDimension/2,
-                                centerX = size.width/2,
-                                centerY = size.height/2
-                            )
-                            //Log.d("Shape", "Drawing shape $tile")
-                            val path = tile.toPath().asComposePath()
-                            onDrawBehind {
-                                drawPath(path,color = tileColor)
-                            }
-                        }.fillMaxSize())*/
+                    for (x in 0..<toDisplay.Size){
+                        var image = R.drawable.floor
 
-                        Box(modifier = Modifier.background(tileColor).fillMaxSize().defaultMinSize(10.dp,10.dp))
+                        if (toDisplay.Tiles[x][y].IsWall)
+                            image = R.drawable.wall
+
+                        CreateTile(Modifier.weight(1f)
+                            .background(Color(0xFF3D3D3D))
+                            .fillMaxSize()
+                            .defaultMinSize(10.dp,10.dp))
+                        {
+                            Image(bitmap = ImageBitmap.imageResource(image),
+                                contentDescription = "",
+                                modifier = Modifier.fillMaxSize(),
+                                filterQuality = FilterQuality.None)
+                        }
                     }
+
+                    // Border right
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
+                }
+            }
+
+            // Lower border
+            Row(modifier = Modifier.fillMaxSize().weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(margin),
+                verticalAlignment = Alignment.CenterVertically) {
+
+                for (x in 0..toDisplay.Size+1){
+                    CreateTile(Modifier.weight(1f)
+                        .background(Color(0xFF3D3D3D))
+                        .fillMaxSize()
+                        .defaultMinSize(10.dp,10.dp),
+                        R.drawable.wall)
                 }
             }
         }
-    }*/
+    }
+}
+
+@Composable
+fun MazeDisplay(modifier: Modifier,toDisplay: Maze, gameManager: GameManager/*playerManager: PlayerManager, enemyManager: EnemyManager*/) {
+    val dimension = 360.dp
+    val margin = 0.dp
 
     Box(modifier = modifier.size(dimension)) {
         Column(modifier = Modifier.fillMaxSize(),
