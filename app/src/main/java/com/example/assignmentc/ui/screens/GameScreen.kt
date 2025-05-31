@@ -29,6 +29,18 @@ import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
+
+
+
+
+
 
 @Composable
 fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewModel = viewModel(factory = GameScreenViewModelFactory(LocalContext.current.applicationContext as Application))) {
@@ -59,26 +71,61 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
         ) {
             MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
             Spacer(modifier = Modifier.height(30.dp))
-            MovementButtons(
-                onMove = { direction ->
-                    //playerManager.movePlayer(direction)
-                    //maze = maze.copySelf()
-                    //enemyManager.moveAllEnemies()
 
-                    //gameManager.movePlayer(direction)
-                    //maze = maze.copySelf()
-                    //gameManager.Update()
-                    viewModel.movePlayer(direction)
 
-                    if (walksfx.isPlaying)
-                        walksfx.seekTo(0)
-                    else
-                        walksfx.start()
-                },
-                onUseItem = {viewModel.useItem()},
-                onShowLeaderboard = onNavigateToLeaderboard,
-                useEnabled = viewModel.hasHeldItem.value
-            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MovementButtons(
+                    onMove = { direction ->
+                        //playerManager.movePlayer(direction)
+                        //maze = maze.copySelf()
+                        //enemyManager.moveAllEnemies()
+
+                        //gameManager.movePlayer(direction)
+                        //maze = maze.copySelf()
+                        //gameManager.Update()
+                        viewModel.movePlayer(direction)
+
+                        if (walksfx.isPlaying)
+                            walksfx.seekTo(0)
+                        else
+                            walksfx.start()
+                    },
+                    onUseItem = { viewModel.useItem() },
+                    onShowLeaderboard = onNavigateToLeaderboard,
+                    useEnabled = viewModel.hasHeldItem.value
+                )
+
+                Spacer(modifier = Modifier.width(24.dp))
+
+                // Shows current held item or remains empty
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .border(
+                            BorderStroke(2.dp, Color.LightGray),
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                        )
+                        .background(Color(0xFF1F1B24))
+                ) {
+                    // If an item is held, sprite shows centered in the box
+                    viewModel.heldItemRes.value?.let { resId ->
+                        Image(
+                            painter = painterResource(resId),
+                            contentDescription = "Held Item",
+                            modifier = Modifier
+                                .size(40.dp)
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
+            }
         }
     }
 }
