@@ -6,7 +6,7 @@ import com.example.assignmentc.R
 
 class Player(private var context: Context, var currentTile: Tile?) {
     //var item: Item? = null //TODO: implement item "holding"
-    var health: Int = 1
+    var health: Int = 3
     var maxHealth: Int = 1
     var animation:Animator = Animator(context,R.drawable.player)
 

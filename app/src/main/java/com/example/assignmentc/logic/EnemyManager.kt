@@ -5,9 +5,9 @@ import android.content.Context
 class EnemyManager(private var context: Context,private val maze: Maze, var gameManager: GameManager) {
     var enemies: MutableList<Enemy> = mutableListOf()
 
-    fun spawnEnemies() {
+    fun spawnEnemies(amount: Int) {
         val nonWallOrPlayerTiles = maze.Tiles.flatten().filter { !it.IsWall && gameManager.player?.currentTile != it }
-        val spawnTiles = nonWallOrPlayerTiles.shuffled().take(3)
+        val spawnTiles = nonWallOrPlayerTiles.shuffled().take(amount)
 
         for (tile in spawnTiles) {
             enemies.add(Enemy(context, tile))
@@ -27,15 +27,21 @@ class EnemyManager(private var context: Context,private val maze: Maze, var game
     }
 
     fun moveAllEnemies() {
-        /*val playerTile = playerManager.player?.currentTile ?: return
-        for (enemy in enemies) {
-            enemy.move(playerTile)
-        }*/
-
         val playerTile = gameManager.player?.currentTile ?: return
 
+        // Snapshot of occupied tiles before movement
+        val occupiedTiles = enemies.map { it.currentTile }.toSet()
+
         for (enemy in enemies) {
-            enemy.move(playerTile)
+            enemy.move(
+                playerTile,
+                isTileOccupied = { tile ->
+                    tile != enemy.currentTile && occupiedTiles.contains(tile)
+                },
+                onHitPlayer = {
+                    gameManager.damagePlayer(1)
+                }
+            )
         }
     }
 

@@ -6,16 +6,30 @@ import com.example.assignmentc.R
 
 class Enemy(var context: Context, var currentTile: Tile) {
     var Animation: Animator = Animator(context,R.drawable.enemy)
+    var freezeTurns: Int = 0
 
-    fun move(playerTile: Tile) {
-        val path = EnemyManager.findPath(currentTile, playerTile)
-        if (path != null && path.size > 1) {
-            val nextTile = path[1] // 0 = current position, 1 = next step
-            val direction = currentTile.directionTo(nextTile)
-            if (direction != null) {
-                currentTile = nextTile
-                Animation.Update(direction.ordinal)
-                return
+    fun move(playerTile: Tile, isTileOccupied: (Tile) -> Boolean, onHitPlayer: () -> Unit) {
+        if (freezeTurns > 0) {
+            freezeTurns--
+            return
+        }
+
+        val path = EnemyManager.findPath(currentTile, playerTile) ?: return
+        if (path.size <= 1) return
+
+        val nextTile = path[1]
+
+        // Skip if another enemy is already moving there
+        if (isTileOccupied(nextTile)) return
+
+        val direction = currentTile.directionTo(nextTile)
+        if (direction != null) {
+            currentTile = nextTile
+            Animation.Update(direction.ordinal)
+
+            if (currentTile == playerTile) {
+                onHitPlayer()
+                freezeTurns = 2
             }
         }
     }

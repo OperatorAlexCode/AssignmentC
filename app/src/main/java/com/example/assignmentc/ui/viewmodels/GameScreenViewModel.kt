@@ -21,7 +21,14 @@ class GameScreenViewModel(
     //private val playerManager = PlayerManager(application, _maze.value)
     //private val enemyManager = EnemyManager(application, _maze.value, playerManager)
 
-    private val gameManager = GameManager(application, _maze.value)
+    private val _isGameOver = mutableStateOf(false)
+    val isGameOver: State<Boolean> = _isGameOver
+
+    private val gameManager = GameManager(application, _maze.value).apply {
+        onGameEnd = {
+            _isGameOver.value = true
+        }
+    }
 
     init {
         //playerManager.spawnPlayer()
@@ -30,6 +37,7 @@ class GameScreenViewModel(
     }
 
     fun startGame() {
+        _isGameOver.value = false
         gameManager.StartGame(_maze.value)
     }
 
