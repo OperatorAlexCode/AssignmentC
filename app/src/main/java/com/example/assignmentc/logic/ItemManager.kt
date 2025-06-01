@@ -26,4 +26,6 @@ class ItemManager(private val maze: Maze, private val context: Context) {
     // Find the first “pickup” (not yet placed) item on this tile
     fun findPickupOn(tile: Tile): Item? =
         _items.firstOrNull { it.tile == tile && !it.isPlaced }
+
+    // Delay
 }

@@ -29,7 +29,7 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
 
     // Tracks the drawable resource ID for the currently held item (or null)
     private val _heldItemRes = mutableStateOf<Int?>(gameManager.heldItem?.spriteRes())
-    val heldItemRes: State<Int?> = _heldItemRes
+    //val heldItemRes: State<Int?> = _heldItemRes
 
 
     init {
@@ -40,13 +40,13 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
 
     fun StartGame() {
         gameManager.StartGame(_maze.value)
-        _heldItemRes.value = gameManager.heldItem?.spriteRes()
+        //_heldItemRes.value = gameManager.heldItem?.spriteRes()
     }
 
     fun StartGame(mazeToPlay: Maze) {
         _maze.value = mazeToPlay
         gameManager.StartGame(_maze.value)
-        _heldItemRes.value = gameManager.heldItem?.spriteRes()
+        //_heldItemRes.value = gameManager.heldItem?.spriteRes()
     }
 
 
@@ -66,7 +66,7 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
         _maze.value = _maze.value.copySelf()
         gameManager.Update(1000L)
         _hasHeldItem.value = (gameManager.heldItem != null)
-        _heldItemRes.value = gameManager.heldItem?.spriteRes()
+        //_heldItemRes.value = gameManager.heldItem?.spriteRes()
     }
 
     fun useItem() {
@@ -75,7 +75,7 @@ class GameScreenViewModel(application: Application) : AndroidViewModel(applicati
         _maze.value = gameManager.currentMaze.copySelf()
         // update enabled state
         _hasHeldItem.value = (gameManager.heldItem != null)
-        _heldItemRes.value = gameManager.heldItem?.spriteRes()
+        //_heldItemRes.value = gameManager.heldItem?.spriteRes()
     }
 
     val onUseItem = { useItem() }

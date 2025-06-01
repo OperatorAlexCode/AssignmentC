@@ -71,61 +71,26 @@ fun GameScreen(onNavigateToLeaderboard: () -> Unit, viewModel: GameScreenViewMod
         ) {
             MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
             Spacer(modifier = Modifier.height(30.dp))
+            MovementButtons(
+                onMove = { direction ->
+                    //playerManager.movePlayer(direction)
+                    //maze = maze.copySelf()
+                    //enemyManager.moveAllEnemies()
 
+                    //gameManager.movePlayer(direction)
+                    //maze = maze.copySelf()
+                    //gameManager.Update()
+                    viewModel.movePlayer(direction)
 
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MovementButtons(
-                    onMove = { direction ->
-                        //playerManager.movePlayer(direction)
-                        //maze = maze.copySelf()
-                        //enemyManager.moveAllEnemies()
-
-                        //gameManager.movePlayer(direction)
-                        //maze = maze.copySelf()
-                        //gameManager.Update()
-                        viewModel.movePlayer(direction)
-
-                        if (walksfx.isPlaying)
-                            walksfx.seekTo(0)
-                        else
-                            walksfx.start()
-                    },
-                    onUseItem = { viewModel.useItem() },
-                    onShowLeaderboard = onNavigateToLeaderboard,
-                    useEnabled = viewModel.hasHeldItem.value
-                )
-
-                Spacer(modifier = Modifier.width(24.dp))
-
-                // Shows current held item or remains empty
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .border(
-                            BorderStroke(2.dp, Color.LightGray),
-                            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-                        )
-                        .background(Color(0xFF1F1B24))
-                ) {
-                    // If an item is held, sprite shows centered in the box
-                    viewModel.heldItemRes.value?.let { resId ->
-                        Image(
-                            painter = painterResource(resId),
-                            contentDescription = "Held Item",
-                            modifier = Modifier
-                                .size(40.dp)
-                                .align(Alignment.Center)
-                        )
-                    }
-                }
-            }
+                    if (walksfx.isPlaying)
+                        walksfx.seekTo(0)
+                    else
+                        walksfx.start()
+                },
+                onUseItem = {viewModel.useItem()},
+                onShowLeaderboard = onNavigateToLeaderboard,
+                useEnabled = viewModel.hasHeldItem.value
+            )
         }
     }
 }
