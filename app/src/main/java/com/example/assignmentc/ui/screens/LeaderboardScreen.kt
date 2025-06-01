@@ -1,6 +1,9 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example.assignmentc.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -45,7 +48,6 @@ import com.example.assignmentc.ui.components.ScoreEntryRow
 import com.example.assignmentc.ui.viewmodels.LeaderboardViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmentc.data.FirestoreRepository
-import com.example.assignmentc.ui.components.AddScoreDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +67,6 @@ fun LeaderboardScreen(
         }
     )
 
-    var showAddScoreDialog by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableStateOf("local") }
     val localScores by viewModel.localScores.collectAsState(initial = emptyList())
     val onlineScores by viewModel.onlineScores.collectAsState()
@@ -93,21 +94,8 @@ fun LeaderboardScreen(
         }
     }
 
-    if (showAddScoreDialog) {
-        AddScoreDialog(
-            onDismiss = { showAddScoreDialog = false },
-            onSave = { name, score ->
-                if (selectedTab == "local") {
-                    viewModel.submitLocalScore(name, score)
-                } else {
-                    viewModel.submitOnlineScore(name, score)
-                }
-            }
-        )
-    }
-
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -213,25 +201,21 @@ fun LeaderboardScreen(
                 }
             }
 
-            // Bottom buttons
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(bottom = 40.dp)
             ) {
-                Button(
-                    onClick = { showAddScoreDialog = true },
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    Text("Add Score")
-                }
-
                 Button(
                     onClick = onGoToMenu,
                     modifier = Modifier
-                        .weight(1f)
+                        .width(200.dp)
+                        .align(Alignment.Center),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 8.dp,
+                        pressedElevation = 4.dp,
+                        disabledElevation = 0.dp
+                    )
                 ) {
                     Text("Start Menu")
                 }
