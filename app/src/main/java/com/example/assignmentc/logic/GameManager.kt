@@ -7,11 +7,15 @@ class GameManager(var context: Context, private var maze: Maze) {
     var EnemyManager = EnemyManager(context,maze,this)
 
     var score: Int = 0
+    private var playerMoveCount: Int = 0
+    val maxAmountEnemies = 10
+
+    var onGameEnd: (() -> Unit)? = null
 
     fun StartGame() {
         spawnPlayer()
         EnemyManager = EnemyManager(context,maze,this)
-        EnemyManager.spawnEnemies()
+        EnemyManager.spawnEnemies(3)
     }
 
     fun StartGame(maze: Maze) {
@@ -32,6 +36,7 @@ class GameManager(var context: Context, private var maze: Maze) {
     }
 
     fun EndGame() {
+        onGameEnd?.invoke()
     }
 
     fun spawnPlayer() {
@@ -57,6 +62,14 @@ class GameManager(var context: Context, private var maze: Maze) {
         }
 
         player?.Update(direction)
+
+        playerMoveCount++
+        if (playerMoveCount >= 5) { //5 may be changed for balancing purposes
+            if (EnemyManager.enemies.size < maxAmountEnemies) {
+                EnemyManager.spawnEnemies(1)
+                playerMoveCount = 0
+            }
+        }
     }
 
     fun getPlayerLocation() : Tile? {
@@ -83,5 +96,9 @@ class GameManager(var context: Context, private var maze: Maze) {
 
     fun increaseScore(gainedScore:Int) {
         score += gainedScore
+    }
+
+    fun damagePlayer(amount: Int) {
+        player?.Hurt(amount)
     }
 }
