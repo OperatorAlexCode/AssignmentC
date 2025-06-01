@@ -11,8 +11,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.assignmentc.logic.BlockMaze
 import com.example.assignmentc.logic.LineMaze
+import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.TempleMaze
 import com.example.assignmentc.ui.navigation.Screen
+import com.example.assignmentc.ui.screens.DeathScreen
 import com.example.assignmentc.ui.screens.GameScreen
 import com.example.assignmentc.ui.screens.LeaderboardScreen
 import com.example.assignmentc.ui.screens.MazePickerScreen
@@ -62,16 +64,29 @@ fun MazeNavigationApp() {
                 "BlockMaze" -> BlockMaze()
                 "LineMaze" -> LineMaze()
                 "TempleMaze" -> TempleMaze()
-                else -> TempleMaze() // Default
+                else -> Maze()
             }
 
             GameScreen(
-                onNavigateToLeaderboard = { navController.navigate(Screen.Leaderboard.route) },
+                onNavigateToDeathScreen = { score ->
+                    navController.navigate("${Screen.Death.route}/$score")
+                },
                 initialMaze = maze
             )
         }
         composable(Screen.Leaderboard.route) {
             LeaderboardScreen(onGoToMenu = { navController.navigate(Screen.Start.route) })
+        }
+        composable(
+            route = Screen.Death.route + "/{score}",
+            arguments = listOf(navArgument("score") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val score = backStackEntry.arguments?.getInt("score") ?: 0
+            DeathScreen(
+                score = score,
+                onNavigateToLeaderboard = { navController.navigate(Screen.Leaderboard.route) },
+                onGoToMenu = { navController.popBackStack(Screen.Start.route, false) }
+            )
         }
     }
 }
