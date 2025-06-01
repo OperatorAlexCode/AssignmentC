@@ -42,9 +42,12 @@ open class Maze {
         }
     }
 
-    fun ConnectTiles() {
-        for (x in 0..Size-1)
-            for (y in 0.. Size-1) {
+    open fun ConnectTiles() {
+        for (x in 0..<Size)
+            for (y in 0..<Size) {
+                if (Tiles[x][y].IsWall)
+                    continue
+
                 if (y - 1 >= 0)
                     if (!Tiles[x][y-1].IsWall && Tiles[x][y].NorthTile == null)
                         Tiles[x][y].NorthTile = Tiles[x][y-1]
@@ -67,10 +70,11 @@ open class Maze {
     fun copySelf(): Maze {
         return Maze(this)
     }
-
 }
 
 class BlockMaze: Maze() {
+    override var PlayerStart = Tile(Size / 2,Size / 2 - 2,false)
+
     override fun Construct() {
         for (x in 0..<Size){
             var column = emptyArray<Tile>()
@@ -130,7 +134,7 @@ class LineMaze: Maze() {
             for (x in 2..<Size step 4)
             {
                 Tiles[x][y] = Tile(x,y,state)
-                Tiles[x][y+2] = Tile(x,y,state)
+                Tiles[x][y+2] = Tile(x,y+2,state)
 
                 state = !state
             }
@@ -143,7 +147,7 @@ class LineMaze: Maze() {
             for (y in 2..<Size step 4)
             {
                 Tiles[x][y] = Tile(x,y,state)
-                Tiles[x+2][y] = Tile(x,y,state)
+                Tiles[x+2][y] = Tile(x+2,y,state)
 
                 state = !state
             }

@@ -51,8 +51,8 @@ class GameManager(var context: Context, private var maze: Maze) {
 
         val nextTile = player?.currentTile?.GetTile(direction)
         if (player?.currentTile?.GetTile(direction) != null) {
-            player?.currentTile?.isPlayerLocation = false
-            nextTile?.isPlayerLocation = true
+            //player?.currentTile?.isPlayerLocation = false
+            //nextTile?.isPlayerLocation = true
             player?.currentTile = nextTile
         }
 
