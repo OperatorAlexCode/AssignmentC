@@ -115,7 +115,7 @@ fun DeathScreen(
                         submitted = true
                     }
                 },
-                modifier = Modifier.width(200.dp),
+                modifier = Modifier.fillMaxWidth(0.5f),
                 enabled = !submitted && name.isNotBlank()
             ) {
                 Text(if (submitted) "Submitted!" else "Submit Score")
