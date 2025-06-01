@@ -22,6 +22,8 @@ class TrapItem(
         gameManager.EnemyManager.removeEnemy(triggeringEnemy)
         // Award points for a successful trap
         gameManager.increaseScore(10)
+
+        gameManager.itemManager.remove(this)
     }
 
     /** Helper for when the player “uses” the picked-up trap */

@@ -10,10 +10,10 @@ class ItemManager(private val maze: Maze, private val context: Context) {
 
     var heldItem: Item? = null           // ← Newly added
 
-    private val trapSpawnIntervalTurns = 5    // spawn a new banana‐trap every 5 turns
+    private val trapSpawnIntervalTurns = 2    // spawn a new banana‐trap every 5 turns
     private var turnsSinceLastTrap = 0
     // Optional cap of banana, for testing purposes
-    private val maxGroundTraps = 4
+    private val maxGroundTraps = 10
 
     /**
      * If there is a “pickup” (isPlaced == false) at `tile`, then:

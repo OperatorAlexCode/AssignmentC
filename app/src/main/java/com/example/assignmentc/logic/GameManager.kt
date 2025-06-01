@@ -6,12 +6,12 @@ class GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
     var EnemyManager = EnemyManager(context,maze,this)
 
-    // New: own a single ItemManager for this maze
+
     val itemManager = ItemManager(maze, context)
 
     var score: Int = 0
     private var playerMoveCount: Int = 0
-    val maxAmountEnemies = 10
+    val maxAmountEnemies = 5 // Maximum number of enemies allowed in the game
 
     var onGameEnd: (() -> Unit)? = null
 
@@ -28,17 +28,32 @@ class GameManager(var context: Context, private var maze: Maze) {
 
     fun Update() {
         player?.health?.let {
-            if (it <= 0)
-            {
+            if (it <= 0){
                 EndGame()
                 return
             }
         }
 
         EnemyManager.moveAllEnemies()
+
+        // Changed here
+        val enemiesSnapshot = EnemyManager.enemies.toList()
+        enemiesSnapshot.forEach { enemy ->
+            val eTile = enemy.getLocationTile()
+            // Find any trap lying on this tile
+            val trapsHere = itemManager.items
+                .filterIsInstance<TrapItem>()
+                .filter { it.tile == eTile && it.isPlaced }
+            trapsHere.forEach { trap ->
+                trap.onTrigger(this, enemy)
+                // If multiple traps could conceivably share a tile, they’ll all run onTrigger,
+                // but typically one banana‐peel per tile.
+            }
+        }
+
+
         itemManager.updateBombs()
         itemManager.onNewTurn()
-
     }
 
     fun EndGame() {
@@ -90,7 +105,7 @@ class GameManager(var context: Context, private var maze: Maze) {
     val currentMaze: Maze
         get() = maze
 
-    fun getPlayerLocation() : Tile? {
+    fun getPlayerLocation(): Tile? {
         return player?.currentTile
     }
 
@@ -105,11 +120,11 @@ class GameManager(var context: Context, private var maze: Maze) {
     }
 
     fun isEnemyOnTile(x:Int,y:Int):Boolean {
-        return EnemyManager.enemies.any { e -> e.isOnTile(x,y) }
+        return EnemyManager.enemies.any { e -> e.isOnTile(x, y) }
     }
 
     fun getEnemyOnTile(x:Int,y:Int): Enemy? {
-        return EnemyManager.enemies.find { e -> e.isOnTile(x,y) }
+        return EnemyManager.enemies.find { e -> e.isOnTile(x, y) }
     }
 
     fun increaseScore(gainedScore:Int) {
