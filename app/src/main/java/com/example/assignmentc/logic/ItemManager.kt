@@ -10,6 +10,11 @@ class ItemManager(private val maze: Maze, private val context: Context) {
 
     var heldItem: Item? = null           // ← Newly added
 
+    private val trapSpawnIntervalTurns = 5    // spawn a new banana‐trap every 5 turns
+    private var turnsSinceLastTrap = 0
+    // Optional cap of banana, for testing purposes
+    private val maxGroundTraps = 4
+
     /**
      * If there is a “pickup” (isPlaced == false) at `tile`, then:
      *   1) Remove any previously held item (drop it entirely).
@@ -82,5 +87,27 @@ class ItemManager(private val maze: Maze, private val context: Context) {
     fun findPickupOn(tile: Tile): Item? =
         _items.firstOrNull { it.tile == tile && !it.isPlaced }
 
-    // Delay
+    fun onNewTurn() {
+        turnsSinceLastTrap++
+
+        // Only spawn if enough turns have passed AND we’re under the cap
+        val groundTrapCount = _items.count { it is TrapItem && !it.isPlaced }
+        if (turnsSinceLastTrap >= trapSpawnIntervalTurns && groundTrapCount < maxGroundTraps) {
+            // Choose a random valid tile (we’ll put chooseSpawnTile() below)
+            val spawnTile = chooseSpawnTile()
+            spawnTrap(spawnTile)
+            turnsSinceLastTrap = 0  // reset the counter after spawning one trap
+        }
+    }
+
+    private fun chooseSpawnTile(): Tile {
+        val size = maze.Size
+        val min = size / 4
+        val max = size * 3 / 4
+
+        val candidates = maze.Tiles.flatten()
+            .filter { !it.IsWall }                    // no walls
+            .filter { it.XPos in min..max && it.YPos in min..max } // central quadrant
+        return candidates.shuffled().first()
+    }
 }

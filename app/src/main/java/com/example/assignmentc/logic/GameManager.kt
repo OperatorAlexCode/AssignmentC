@@ -37,6 +37,8 @@ class GameManager(var context: Context, private var maze: Maze) {
 
         EnemyManager.moveAllEnemies()
         itemManager.updateBombs()
+        itemManager.onNewTurn()
+
     }
 
     fun EndGame() {
