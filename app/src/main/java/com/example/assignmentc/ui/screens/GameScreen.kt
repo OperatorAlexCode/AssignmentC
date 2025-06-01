@@ -72,8 +72,14 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            ScoreDisplay(gameManager = gameManager)
+
+            //Spacer(modifier = Modifier.height(10.dp))
+
             MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
+
             Spacer(modifier = Modifier.height(30.dp))
+
             Row {
                 MovementButtons(
                     onMove = { direction ->
