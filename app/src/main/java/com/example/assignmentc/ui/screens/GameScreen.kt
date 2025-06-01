@@ -26,7 +26,7 @@ import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
 
 @Composable
 fun GameScreen(
-    onNavigateToLeaderboard: () -> Unit,
+    onNavigateToDeathScreen: (Int) -> Unit,
     initialMaze: Maze,
     viewModel: GameScreenViewModel = viewModel(
         factory = GameScreenViewModelFactory(
@@ -41,7 +41,8 @@ fun GameScreen(
 
     LaunchedEffect(isGameOver) {
         if (isGameOver) {
-            onNavigateToLeaderboard()
+            val score = viewModel.getGameManager().score
+            onNavigateToDeathScreen(score)
         }
     }
     /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
@@ -85,7 +86,6 @@ fun GameScreen(
                     else
                         walksfx.start()
                 },
-                onShowLeaderboard = onNavigateToLeaderboard
             )
         }
     }

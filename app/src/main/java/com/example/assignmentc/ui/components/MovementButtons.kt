@@ -45,7 +45,6 @@ import kotlinx.coroutines.launch
 fun MovementButtons(
     modifier: Modifier = Modifier,
     onMove: (Direction) -> Unit,
-    onShowLeaderboard: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val buttons: Bitmap = BitmapFactory.decodeResource(LocalContext.current.resources,R.drawable.buttons)
@@ -160,12 +159,5 @@ fun MovementButtons(
             spriteSheet = buttons,
             button = 1 + Direction.South.ordinal,
             onClick = {onMove(Direction.South)})
-
-        Button(
-            onClick = onShowLeaderboard,
-            modifier = Modifier.padding(top = 20.dp)
-        ) {
-            Text("Show Leaderboard")
-        }
     }
 }
