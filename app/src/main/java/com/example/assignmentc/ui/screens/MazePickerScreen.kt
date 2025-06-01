@@ -37,6 +37,7 @@ fun MazePickerScreen(
     val context = LocalContext.current
     val mazeTypes = remember {
         listOf(
+            Maze() to "Default maze",
             BlockMaze() to "Block Maze",
             LineMaze() to "Line Maze",
             TempleMaze() to "Temple Maze"
@@ -74,8 +75,7 @@ fun MazePickerScreen(
                 modifier = Modifier
                     .size(300.dp)
                     .background(Color(0xFF333333)),
-                maze = currentMaze,
-                gameManager = dummyGameManager
+                maze = currentMaze
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -116,14 +116,12 @@ fun MazePickerScreen(
 @Composable
 fun MazePreviewDisplay(
     modifier: Modifier,
-    maze: Maze,
-    gameManager: GameManager
+    maze: Maze
 ) {
     Box(modifier = modifier) {
         MazeDisplay(
             modifier = Modifier.fillMaxSize(),
-            toDisplay = maze,
-            gameManager = gameManager
+            toDisplay = maze
         )
     }
 }
