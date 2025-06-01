@@ -2,12 +2,15 @@ package com.example.assignmentc.ui.screens
 
 import android.media.MediaPlayer
 import android.app.Application
+import android.content.ClipData
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmentc.R
 import com.example.assignmentc.logic.Maze
+import com.example.assignmentc.ui.components.ItemBox
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
@@ -70,23 +74,29 @@ fun GameScreen(
         ) {
             MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
             Spacer(modifier = Modifier.height(30.dp))
-            MovementButtons(
-                onMove = { direction ->
-                    //playerManager.movePlayer(direction)
-                    //maze = maze.copySelf()
-                    //enemyManager.moveAllEnemies()
+            Row {
+                MovementButtons(
+                    onMove = { direction ->
+                        //playerManager.movePlayer(direction)
+                        //maze = maze.copySelf()
+                        //enemyManager.moveAllEnemies()
 
-                    //gameManager.movePlayer(direction)
-                    //maze = maze.copySelf()
-                    //gameManager.Update()
-                    viewModel.movePlayer(direction)
+                        //gameManager.movePlayer(direction)
+                        //maze = maze.copySelf()
+                        //gameManager.Update()
+                        viewModel.movePlayer(direction)
 
-                    if (walksfx.isPlaying)
-                        walksfx.seekTo(0)
-                    else
-                        walksfx.start()
-                },
-            )
+                        if (walksfx.isPlaying)
+                            walksfx.seekTo(0)
+                        else
+                            walksfx.start()
+                    },
+                )
+
+                Spacer(Modifier.size(30.dp))
+
+                ItemBox(gameManager = gameManager)
+            }
         }
     }
 }
