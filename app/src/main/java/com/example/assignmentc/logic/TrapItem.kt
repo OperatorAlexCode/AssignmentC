@@ -5,28 +5,20 @@ import com.example.assignmentc.R
 class TrapItem(
     override var tile: Tile
 ) : Item(tile) {
-    // Flip to true once the player Uses the trap.
     private var placed: Boolean = false
     override val isPlaced: Boolean get() = placed
 
-    // Draw banana on ground, peel when placed.
+    // Draw banana on ground
     override fun spriteRes(): Int =
         if (!placed) R.drawable.banana else R.drawable.banana_peel
 
-    /**
-     * Called when an enemy walks on a placed peel:
-     * Removes the enemy via your EnemyManager and awards score.
-     */
     override fun onTrigger(gameManager: GameManager, triggeringEnemy: Enemy) {
-        // Remove this enemy from the game
         gameManager.EnemyManager.removeEnemy(triggeringEnemy)
-        // Award points for a successful trap
         gameManager.increaseScore(10)
-
         gameManager.itemManager.remove(this)
     }
 
-    /** Helper for when the player “uses” the picked-up trap */
+
     override fun place(on: Tile) {
         tile = on
         placed = true

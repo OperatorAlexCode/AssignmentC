@@ -2,26 +2,28 @@ package com.example.assignmentc.logic
 
 import android.content.Context
 
-class ItemManager(private val maze: Maze, private val context: Context) {
+class ItemManager(
+    private val maze: Maze,
+    private val context: Context,
+    private val gameManager: GameManager
+) {
 
-    // All the items (both pickup-state and placed)
+    // All the items (both pickup‐state and placed)
     internal val _items = mutableListOf<Item>()
     val items: List<Item> get() = _items
 
-    var heldItem: Item? = null           // ← Newly added
+    var heldItem: Item? = null
 
-    private val trapSpawnIntervalTurns = 2    // spawn a new banana‐trap every 5 turns
+    private val trapSpawnIntervalTurns = 5    // spawn a new banana‐trap every 5 turns
     private var turnsSinceLastTrap = 0
-    // Optional cap of banana, for testing purposes
-    private val maxGroundTraps = 10
 
-    /**
-     * If there is a “pickup” (isPlaced == false) at `tile`, then:
-     *   1) Remove any previously held item (drop it entirely).
-     *   2) Set that ground item into heldItem.
-     *   3) Remove it from the world list (_items).
-     * Returns true if an item was picked up, false otherwise.
-     */
+    // Added here: separate counter for bombs
+    private val bombSpawnIntervalTurns = 4   // spawn a new bomb every 5 turns
+    private var turnsSinceLastBomb = 0
+
+    // Optional cap of banana, for testing purposes
+    private val maxGroundTraps = 4
+
     fun tryPickUp(tile: Tile): Boolean {
         val pickup = findPickupOn(tile) ?: return false
         // 1) Drop old held item (remove from world)
@@ -33,32 +35,36 @@ class ItemManager(private val maze: Maze, private val context: Context) {
         return true
     }
 
-    /**
-     * If the player is holding an item, place it onto `tile`, re‐insert into _items,
-     * clear heldItem, and return true. Otherwise return false.
-     *
-     * After placing:
-     *   - For TrapItem: tile→ peel sprite.
-     *   - For BombItem: tile→ start priming.
-     */
     fun useHeldItem(on: Tile): Boolean {
         val item = heldItem ?: return false
-        item.place(on)          // banana→peel or bomb→primed
-        _items += item          // put it back into the world
+        item.place(on)
+        _items += item
         heldItem = null
         return true
     }
 
-    /**
-     * Advance any BombItem animations by one “tick.” If update() returns true (meaning the final
-     * explosion frame has just been shown), remove that bomb from _items.
-     * Return the number of bombs that finished exploding this tick (or a list if you prefer).
-     */
     fun updateBombs(): Int {
         val toRemove = mutableListOf<BombItem>()
         for (item in _items) {
             if (item is BombItem) {
+                // Before calling update(), check if the bomb is about to enter its “exploding” state
+                val wasPrimed = item.isPrimed
                 val finished = item.update()
+
+                if (wasPrimed && item.isExploding) {
+                    // 1) Compute all tiles within blast radius
+                    val blastTiles = item.getBlastTiles(maze)
+
+                    // 2) For every enemy still alive on one of those tiles, remove and award points
+                    val enemiesToKill = gameManager.EnemyManager.enemies
+                        .filter { e -> blastTiles.contains(e.currentTile) }
+                    for (enemy in enemiesToKill) {
+                        gameManager.EnemyManager.removeEnemy(enemy)
+                        // Award points for each enemy caught in blast
+                        gameManager.increaseScore(20)
+                    }
+                }
+
                 if (finished) {
                     toRemove += item
                 }
@@ -89,6 +95,7 @@ class ItemManager(private val maze: Maze, private val context: Context) {
 
     fun onNewTurn() {
         turnsSinceLastTrap++
+        turnsSinceLastBomb++
 
         // Only spawn if enough turns have passed AND we’re under the cap
         val groundTrapCount = _items.count { it is TrapItem && !it.isPlaced }
@@ -96,7 +103,14 @@ class ItemManager(private val maze: Maze, private val context: Context) {
             // Choose a random valid tile (we’ll put chooseSpawnTile() below)
             val spawnTile = chooseSpawnTile()
             spawnTrap(spawnTile)
-            turnsSinceLastTrap = 0  // reset the counter after spawning one trap
+            turnsSinceLastTrap = 0  // reset the trap counter
+        }
+
+        // spawn a bomb every bombSpawnIntervalTurns
+        if (turnsSinceLastBomb >= bombSpawnIntervalTurns) {
+            val bombTile = chooseSpawnTile()  // reuse the same helper
+            spawnBomb(bombTile)
+            turnsSinceLastBomb = 0  // reset the bomb counter
         }
     }
 
@@ -106,7 +120,7 @@ class ItemManager(private val maze: Maze, private val context: Context) {
         val max = size * 3 / 4
 
         val candidates = maze.Tiles.flatten()
-            .filter { !it.IsWall }                    // no walls
+            .filter { !it.IsWall }
             .filter { it.XPos in min..max && it.YPos in min..max } // central quadrant
         return candidates.shuffled().first()
     }

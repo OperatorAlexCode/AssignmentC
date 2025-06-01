@@ -7,7 +7,7 @@ class GameManager(var context: Context, private var maze: Maze) {
     var EnemyManager = EnemyManager(context,maze,this)
 
 
-    val itemManager = ItemManager(maze, context)
+    val itemManager = ItemManager(maze, context, this)
 
     var score: Int = 0
     private var playerMoveCount: Int = 0
@@ -40,17 +40,13 @@ class GameManager(var context: Context, private var maze: Maze) {
         val enemiesSnapshot = EnemyManager.enemies.toList()
         enemiesSnapshot.forEach { enemy ->
             val eTile = enemy.getLocationTile()
-            // Find any trap lying on this tile
             val trapsHere = itemManager.items
                 .filterIsInstance<TrapItem>()
                 .filter { it.tile == eTile && it.isPlaced }
             trapsHere.forEach { trap ->
                 trap.onTrigger(this, enemy)
-                // If multiple traps could conceivably share a tile, they’ll all run onTrigger,
-                // but typically one banana‐peel per tile.
             }
         }
-
 
         itemManager.updateBombs()
         itemManager.onNewTurn()
@@ -61,8 +57,6 @@ class GameManager(var context: Context, private var maze: Maze) {
     }
 
     fun spawnPlayer() {
-        //val nonWallTiles = maze.Tiles.flatten().filter { !it.IsWall }
-        //locationTile = maze.Tiles[0][0]
         player = Player(context,maze.Tiles[maze.PlayerStart.XPos][maze.PlayerStart.YPos])
     }
 
@@ -101,7 +95,6 @@ class GameManager(var context: Context, private var maze: Maze) {
         return itemManager.useHeldItem(pTile)
     }
 
-    // Expose “currentMaze” so ViewModel can do currentMaze.copySelf()
     val currentMaze: Maze
         get() = maze
 
