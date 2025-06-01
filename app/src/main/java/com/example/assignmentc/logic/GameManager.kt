@@ -6,6 +6,9 @@ class GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
     var EnemyManager = EnemyManager(context,maze,this)
 
+    // New: own a single ItemManager for this maze
+    val itemManager = ItemManager(maze, context)
+
     var score: Int = 0
     private var playerMoveCount: Int = 0
     val maxAmountEnemies = 10
@@ -33,6 +36,7 @@ class GameManager(var context: Context, private var maze: Maze) {
         }
 
         EnemyManager.moveAllEnemies()
+        itemManager.updateBombs()
     }
 
     fun EndGame() {
@@ -63,6 +67,9 @@ class GameManager(var context: Context, private var maze: Maze) {
 
         player?.Update(direction)
 
+        // Try picking up any ground item on the new tile:
+        player?.currentTile?.let { itemManager.tryPickUp(it) }
+
         playerMoveCount++
         if (playerMoveCount >= 5) { //5 may be changed for balancing purposes
             if (EnemyManager.enemies.size < maxAmountEnemies) {
@@ -71,6 +78,15 @@ class GameManager(var context: Context, private var maze: Maze) {
             }
         }
     }
+
+    fun useHeldItem(): Boolean {
+        val pTile = player?.currentTile ?: return false
+        return itemManager.useHeldItem(pTile)
+    }
+
+    // Expose “currentMaze” so ViewModel can do currentMaze.copySelf()
+    val currentMaze: Maze
+        get() = maze
 
     fun getPlayerLocation() : Tile? {
         return player?.currentTile
