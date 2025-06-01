@@ -1,28 +1,21 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
-import kotlin.random.Random
 
-class  GameManager(var context: Context, private var maze: Maze) {
+class GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
     var EnemyManager = EnemyManager(context,maze,this)
-    val currentMaze: Maze
-        get() = maze
+
     var score: Int = 0
+    private var playerMoveCount: Int = 0
+    val maxAmountEnemies = 10
 
-    val itemManager = ItemManager(maze, context)
-
-    // Spawn timing & cap for items
-    private val spawnIntervalMs = 5_000L  // 5 seconds = 5 turns
-    private var spawnAccumulatorMs = 0L
-    private val maxGroundItems = 5
-
-    var heldItem: Item? = null
+    var onGameEnd: (() -> Unit)? = null
 
     fun StartGame() {
         spawnPlayer()
         EnemyManager = EnemyManager(context,maze,this)
-        EnemyManager.spawnEnemies()
+        EnemyManager.spawnEnemies(3)
     }
 
     fun StartGame(maze: Maze) {
@@ -30,65 +23,20 @@ class  GameManager(var context: Context, private var maze: Maze) {
         StartGame()
     }
 
-    fun Update(deltaTimeMs: Long) {
-        player?.health?.takeIf { it <= 0 }?.also {
-            EndGame()
-            return
+    fun Update() {
+        player?.health?.let {
+            if (it <= 0)
+            {
+                EndGame()
+                return
+            }
         }
-        spawnAccumulatorMs += deltaTimeMs
-        trySpawnItem()
 
         EnemyManager.moveAllEnemies()
-
-        for (enemy in EnemyManager.enemies.toList()) {
-            val placedItem = itemManager.items
-                .firstOrNull { it.tile == enemy.currentTile && it.isPlaced }
-            if (placedItem != null) {
-                placedItem.onTrigger(this, enemy)
-                // Only clear immediate for traps, not bombs
-                if (placedItem is TrapItem) {
-                    itemManager.remove(placedItem)
-                }
-            }
-        }
-
-        // tick all bombs and clean up finished explosions
-        val toRemove = mutableListOf<Item>()
-        itemManager.items.forEach { item ->
-            if (item is BombItem && item.update()) {
-                toRemove += item
-            }
-        }
-        toRemove.forEach { itemManager.remove(it) }
-    }
-
-    private fun trySpawnItem() {
-        // Only spawn if enough time elapsed AND we’re under cap
-        val groundCount = itemManager.items.count { !it.isPlaced }
-        if (spawnAccumulatorMs >= spawnIntervalMs && groundCount < maxGroundItems) {
-            val tile = chooseSpawnTile()
-            if (Random.nextBoolean()) {
-                itemManager.spawnTrap(tile)
-            } else {
-                itemManager.spawnBomb(tile)
-            }
-            spawnAccumulatorMs = 0L
-        }
-    }
-
-    private fun chooseSpawnTile(): Tile {
-        // e.g. only tiles within 1/4–3/4 of maze size
-        val size = maze.Size
-        val min = size / 4
-        val max = size * 3 / 4
-        val candidates = maze.Tiles
-            .flatten()
-            .filter { !it.IsWall && player?.currentTile != it }
-            .filter { it.XPos in min..max && it.YPos in min..max }
-        return candidates.shuffled().first()
     }
 
     fun EndGame() {
+        onGameEnd?.invoke()
     }
 
     fun spawnPlayer() {
@@ -107,34 +55,20 @@ class  GameManager(var context: Context, private var maze: Maze) {
         }*/
 
         val nextTile = player?.currentTile?.GetTile(direction)
-        if (nextTile != null) {
-            player?.currentTile?.isPlayerLocation = false
-            nextTile.isPlayerLocation = true
+        if (player?.currentTile?.GetTile(direction) != null) {
+            //player?.currentTile?.isPlayerLocation = false
+            //nextTile?.isPlayerLocation = true
             player?.currentTile = nextTile
         }
 
         player?.Update(direction)
 
-        // Pickup logic
-        nextTile?.let { tile ->
-            itemManager.findPickupOn(tile)?.let { item ->
-                heldItem?.let { itemManager.remove(it) }
-                heldItem = item
-                itemManager.remove(item)
+        playerMoveCount++
+        if (playerMoveCount >= 5) { //5 may be changed for balancing purposes
+            if (EnemyManager.enemies.size < maxAmountEnemies) {
+                EnemyManager.spawnEnemies(1)
+                playerMoveCount = 0
             }
-        }
-    }
-
-    /**
-     * Called by UI when the player “uses” their held item.
-     * Plants the item at the player’s current tile and
-     * moves it out of heldItem into itemManager’s placed list.
-     */
-    fun useHeldItem() {
-        heldItem?.let { item ->
-            player?.currentTile?.let { item.place(it) }
-            itemManager._items += item
-            heldItem = null
         }
     }
 
@@ -162,5 +96,9 @@ class  GameManager(var context: Context, private var maze: Maze) {
 
     fun increaseScore(gainedScore:Int) {
         score += gainedScore
+    }
+
+    fun damagePlayer(amount: Int) {
+        player?.Hurt(amount)
     }
 }

@@ -55,7 +55,7 @@ fun MovementButtons(
     val buttonSize = 50.dp
     val buttonColor = ColorFilter/*.tint(Color.Red, BlendMode.Darken)*/
 
-    var buttonN: Bitmap by remember {
+    /*var buttonN: Bitmap by remember {
         mutableStateOf(GetIcon(buttons,1 + Direction.North.ordinal,0))
     }
 
@@ -69,7 +69,7 @@ fun MovementButtons(
 
     var buttonW: Bitmap by remember {
         mutableStateOf(GetIcon(buttons,1 + Direction.West.ordinal,0))
-    }
+    }*/
 
     Column(
         modifier = modifier,
@@ -77,7 +77,7 @@ fun MovementButtons(
         verticalArrangement = Arrangement.Center
     ) {
         // Existing movement buttons code
-        IconButton(onClick = { scope.launch {
+        /*IconButton(onClick = { scope.launch {
                 delay(200)
                 buttonN = GetIcon(buttons,1 + Direction.North.ordinal,0)
             }
@@ -88,13 +88,20 @@ fun MovementButtons(
                 contentDescription = "Up",
                 filterQuality = FilterQuality.None,
                 /*colorFilter = buttonColor*/)
-        }
+        }*/
+
+        AnimatedButton(
+            modifier = Modifier.size(buttonSize).background(Color.Transparent),
+            description = "Up",
+            spriteSheet = buttons,
+            button = 1 + Direction.North.ordinal,
+            onClick = {onMove(Direction.North)})
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { scope.launch {
+            /*IconButton(onClick = { scope.launch {
                     delay(200)
                     buttonW = GetIcon(buttons,1 + Direction.West.ordinal,0)
                 }
@@ -105,11 +112,18 @@ fun MovementButtons(
                     contentDescription = "Left",
                     filterQuality = FilterQuality.None,
                     /*colorFilter = buttonColor*/)
-            }
+            }*/
+
+            AnimatedButton(
+                modifier = Modifier.size(buttonSize).background(Color.Transparent),
+                description = "Left",
+                spriteSheet = buttons,
+                button = 1 + Direction.West.ordinal,
+                onClick = {onMove(Direction.West)})
 
             Spacer(modifier = Modifier.size(buttonSize))
 
-            IconButton(onClick = { scope.launch {
+            /*IconButton(onClick = { scope.launch {
                     delay(200)
                     buttonE = GetIcon(buttons,1 + Direction.East.ordinal,0)
                 }
@@ -120,10 +134,17 @@ fun MovementButtons(
                     contentDescription = "Right",
                     filterQuality = FilterQuality.None,
                     /*colorFilter = buttonColor*/)
-            }
+            }*/
+
+            AnimatedButton(
+                modifier = Modifier.size(buttonSize).background(Color.Transparent),
+                description = "Right",
+                spriteSheet = buttons,
+                button = 1 + Direction.East.ordinal,
+                onClick = {onMove(Direction.East)})
         }
 
-        IconButton(onClick = { scope.launch {
+        /*IconButton(onClick = { scope.launch {
                 delay(200)
                 buttonS = GetIcon(buttons,1 + Direction.South.ordinal,0)
             }
@@ -134,7 +155,14 @@ fun MovementButtons(
                 contentDescription = "South",
                 filterQuality = FilterQuality.None,
                 /*colorFilter = buttonColor*/)
-        }
+        }*/
+
+        AnimatedButton(
+            modifier = Modifier.size(buttonSize).background(Color.Transparent),
+            description = "Down",
+            spriteSheet = buttons,
+            button = 1 + Direction.South.ordinal,
+            onClick = {onMove(Direction.South)})
 
         Button(
             modifier = Modifier
@@ -152,17 +180,4 @@ fun MovementButtons(
             Text("Show Leaderboard")
         }
     }
-}
-
-fun GetIcon(image: Bitmap, button:Int, isClicked:Int): Bitmap {
-    var height: Int = image.height/5
-    var width: Int = image.width/2
-
-    return Bitmap.createBitmap(
-        image,
-        width * isClicked,
-        height * button,
-        width,
-        height
-    )
 }

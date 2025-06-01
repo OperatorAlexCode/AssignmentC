@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +49,13 @@ fun GameScreen(
 ) {
     var context = LocalContext.current
     val maze by viewModel.maze
+    val isGameOver by viewModel.isGameOver
+
+    LaunchedEffect(isGameOver) {
+        if (isGameOver) {
+            onNavigateToLeaderboard()
+        }
+    }
     /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
     playerManager.spawnPlayer()
     val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
