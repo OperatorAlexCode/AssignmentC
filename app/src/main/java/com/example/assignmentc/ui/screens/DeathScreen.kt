@@ -137,9 +137,10 @@ fun DeathScreen(
             }
 
             // Error Message
-            if (viewModel.errorMessage.value.isNotBlank()) {
+            val errorMessage by viewModel.errorMessage.collectAsState()
+            if (errorMessage.isNotBlank()) {
                 Text(
-                    text = viewModel.errorMessage.value,
+                    text = errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(top = 16.dp)
                 )
