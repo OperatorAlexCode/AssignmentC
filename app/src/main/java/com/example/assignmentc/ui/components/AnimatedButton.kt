@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.unit.dp
 import com.example.assignmentc.logic.Direction
 import kotlinx.coroutines.Delay
 import kotlinx.coroutines.delay
@@ -44,7 +45,7 @@ fun AnimatedButton(modifier: Modifier, description: String = "button", spriteShe
 }
 
 fun GetIcon(image: Bitmap, button:Int, isClicked:Int): Bitmap {
-    var height: Int = image.height/5
+    var height: Int = image.height/7
     var width: Int = image.width/2
 
     return Bitmap.createBitmap(

@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import com.example.assignmentc.R
 import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Player
+import com.example.assignmentc.ui.components.AnimatedButton
 import com.example.assignmentc.ui.components.MazeDisplay
 
 @Composable
@@ -52,6 +53,8 @@ fun MazePickerScreen(
             player = Player(context, currentMaze.Tiles[currentMaze.Size / 2][currentMaze.Size / 2])
         }
     }
+
+    val buttonSpriteSheet = BitmapFactory.decodeResource(LocalContext.current.resources,R.drawable.buttons)
 
     Scaffold { innerPadding ->
         Column(
@@ -84,11 +87,19 @@ fun MazePickerScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(32.dp)
             ) {
-                ArrowButton(direction = Direction.West, onClick = { viewModel.prevMaze(mazeTypes.size) })
+                AnimatedButton(modifier = Modifier.size(50.dp),
+                    description = "Left",
+                    spriteSheet = buttonSpriteSheet,
+                    button = 1 + Direction.West.ordinal,
+                    onClick = { viewModel.prevMaze(mazeTypes.size) })
 
                 Text(text = "${currentMazeIndex + 1}/${mazeTypes.size}")
 
-                ArrowButton(direction = Direction.East, onClick = { viewModel.nextMaze(mazeTypes.size) })
+                AnimatedButton(modifier = Modifier.size(50.dp),
+                    description = "Right",
+                    spriteSheet = buttonSpriteSheet,
+                    button = 1 + Direction.East.ordinal,
+                    onClick = { viewModel.nextMaze(mazeTypes.size) })
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -96,18 +107,30 @@ fun MazePickerScreen(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                Button(
+                /*Button(
                     onClick = onCancel,
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
                 ) {
                     Text("Cancel")
-                }
+                }*/
 
-                Button(
+                AnimatedButton(modifier = Modifier.size(50.dp),
+                    description = "Cancel",
+                    spriteSheet = buttonSpriteSheet,
+                    button = 6,
+                    onClick = onCancel)
+
+                /*Button(
                     onClick = { onMazeSelected(currentMaze) }
                 ) {
                     Text("Start Game")
-                }
+                }*/
+
+                AnimatedButton(modifier = Modifier.size(50.dp),
+                    description = "Select",
+                    spriteSheet = buttonSpriteSheet,
+                    button = 5,
+                    onClick = { onMazeSelected(currentMaze) })
             }
         }
     }
@@ -124,61 +147,4 @@ fun MazePreviewDisplay(
             toDisplay = maze
         )
     }
-}
-
-@Composable
-fun ArrowButton(
-    direction: Direction,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-    val buttons: Bitmap = remember { BitmapFactory.decodeResource(context.resources, R.drawable.buttons) }
-    val buttonSize = 50.dp
-    val scope = rememberCoroutineScope()
-
-    // Define base offsets for frame index computation
-    val LEFT_ARROW_BASE_OFFSET = 1
-    val RIGHT_ARROW_BASE_OFFSET = 1
-
-    // Get the correct frame based on direction
-    val frameIndex = when(direction) {
-        Direction.West -> LEFT_ARROW_BASE_OFFSET + Direction.West.ordinal  // Left arrow
-        Direction.East -> RIGHT_ARROW_BASE_OFFSET + Direction.East.ordinal  // Right arrow
-        else -> 0
-    }
-
-    var buttonBitmap by remember { mutableStateOf(GetIcon(buttons, frameIndex, 0)) }
-
-    IconButton(
-        onClick = {
-            onClick()
-            scope.launch {
-                buttonBitmap = GetIcon(buttons, frameIndex, 1) // Pressed state
-                delay(200)
-                buttonBitmap = GetIcon(buttons, frameIndex, 0) // Normal state
-            }
-        },
-        modifier = modifier.size(buttonSize)
-    ) {
-        Image(
-            bitmap = buttonBitmap.asImageBitmap(),
-            contentDescription = direction.name,
-            filterQuality = FilterQuality.None
-        )
-    }
-}
-
-fun GetIcon(image: Bitmap, button: Int, isClicked: Int): Bitmap {
-    val rows = 5 // Based on your button sprite sheet
-    val height = image.height / rows
-    val width = image.width / 2 // 2 columns (normal and pressed)
-
-    return Bitmap.createBitmap(
-        image,
-        width * isClicked,
-        height * button,
-        width,
-        height
-    )
 }
