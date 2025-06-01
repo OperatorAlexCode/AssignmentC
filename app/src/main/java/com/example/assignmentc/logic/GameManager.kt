@@ -11,7 +11,7 @@ class GameManager(var context: Context, private var maze: Maze) {
 
     var score: Int = 0
     private var playerMoveCount: Int = 0
-    val maxAmountEnemies = 5 // Maximum number of enemies allowed in the game
+    val maxAmountEnemies = 3 // Maximum number of enemies allowed in the game
 
     var onGameEnd: (() -> Unit)? = null
 

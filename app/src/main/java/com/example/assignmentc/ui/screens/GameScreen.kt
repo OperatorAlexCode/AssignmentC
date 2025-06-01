@@ -23,22 +23,12 @@ import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.graphics.Color
-
-
-
-
+import androidx.compose.foundation.layout.Row
 
 
 @Composable
 fun GameScreen(
-    onNavigateToLeaderboard: () -> Unit,
+    onNavigateToLeaderboard: (Int) -> Unit,
     initialMaze: Maze,
     viewModel: GameScreenViewModel = viewModel(
         factory = GameScreenViewModelFactory(
@@ -53,7 +43,8 @@ fun GameScreen(
 
     LaunchedEffect(isGameOver) {
         if (isGameOver) {
-            onNavigateToLeaderboard()
+            val score = viewModel.getGameManager().score
+            onNavigateToDeathScreen(score)
         }
     }
     /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
@@ -79,9 +70,14 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
+            ScoreDisplay(gameManager = gameManager)
+
             MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
             Spacer(modifier = Modifier.height(30.dp))
-            MovementButtons(
+
+            Row {
+                MovementButtons(
                 onMove = { direction ->
                     //playerManager.movePlayer(direction)
                     //maze = maze.copySelf()
@@ -100,7 +96,8 @@ fun GameScreen(
                 onUseItem = {viewModel.useItem()},
                 onShowLeaderboard = onNavigateToLeaderboard,
                 useEnabled = viewModel.hasHeldItem.value
-            )
+            )}
+
         }
     }
 }

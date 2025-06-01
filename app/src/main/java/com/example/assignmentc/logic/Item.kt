@@ -13,7 +13,6 @@ sealed class Item(open var tile: Tile) {
     // Which sprite to draw for the current state?
     abstract fun spriteRes(): Int
 
-
     /**
      * Default bitmap fetcher: loads the spriteRes() drawable.
      * Subclasses with animations can override this.
@@ -37,4 +36,13 @@ sealed class Item(open var tile: Tile) {
      * queue themselves for removal from ItemManager.
      */
     abstract fun onTrigger(gameManager: GameManager, triggeringEnemy: Enemy)
+
+    /**
+     * Called when the player steps onto this item _before_ it’s been placed or
+     * if it’s a score‐only pickup on the ground. Default is no-op.
+     * Subclasses override to award points or apply other effects immediately.
+     */
+    open fun onPlayerPickup(gameManager: GameManager) {
+        // default: do nothing
+    }
 }
