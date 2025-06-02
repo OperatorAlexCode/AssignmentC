@@ -1,10 +1,14 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.playerandenemies
 
 import android.content.Context
 import android.media.MediaPlayer
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.GameManager
+import com.example.assignmentc.logic.other.Maze
+import com.example.assignmentc.logic.other.Tile
+import kotlin.math.abs
 
-class EnemyManager(private var context: Context,private val maze: Maze, var gameManager: GameManager) {
+class EnemyManager(private var context: Context, private val maze: Maze, var gameManager: GameManager) {
     var enemies: MutableList<Enemy> = mutableListOf()
     var hitSfx = MediaPlayer.create(context,R.raw.hit)
 
@@ -59,7 +63,7 @@ class EnemyManager(private var context: Context,private val maze: Maze, var game
             val closedSet = mutableSetOf<Tile>()
 
             fun heuristic(a: Tile, b: Tile): Int {
-                return kotlin.math.abs(a.XPos - b.XPos) + kotlin.math.abs(a.YPos - b.YPos)
+                return abs(a.XPos - b.XPos) + abs(a.YPos - b.YPos)
             }
 
             openList.add(Node(start, null, 0, heuristic(start, goal)))

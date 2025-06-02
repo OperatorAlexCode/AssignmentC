@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmentc.R
-import com.example.assignmentc.logic.Maze
+import com.example.assignmentc.logic.other.Maze
 import com.example.assignmentc.ui.components.ItemBox
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons

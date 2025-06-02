@@ -1,9 +1,7 @@
 package com.example.assignmentc.ui.screens
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,22 +9,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.assignmentc.logic.BlockMaze
-import com.example.assignmentc.logic.Direction
-import com.example.assignmentc.logic.LineMaze
-import com.example.assignmentc.logic.Maze
-import com.example.assignmentc.logic.TempleMaze
+import com.example.assignmentc.logic.other.BlockMaze
+import com.example.assignmentc.logic.other.Direction
+import com.example.assignmentc.logic.other.LineMaze
+import com.example.assignmentc.logic.other.Maze
+import com.example.assignmentc.logic.other.TempleMaze
 import com.example.assignmentc.ui.viewmodels.MazePickerViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import com.example.assignmentc.R
 import com.example.assignmentc.logic.GameManager
-import com.example.assignmentc.logic.Player
+import com.example.assignmentc.logic.playerandenemies.Player
 import com.example.assignmentc.ui.components.AnimatedButton
 import com.example.assignmentc.ui.components.MazeDisplay
 

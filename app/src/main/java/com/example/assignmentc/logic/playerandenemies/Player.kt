@@ -1,14 +1,17 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.playerandenemies
 
 import android.content.Context
 import android.graphics.Bitmap
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.other.Animator
+import com.example.assignmentc.logic.other.Direction
+import com.example.assignmentc.logic.other.Tile
 
 class Player(private var context: Context, var currentTile: Tile?) {
     //var item: Item? = null //TODO: implement item "holding"
     var health: Int = 0
     var maxHealth: Int = 3
-    var animation:Animator = Animator(context,R.drawable.player)
+    var animation: Animator = Animator(context, R.drawable.player)
 
     fun Update(direction: Direction) {
         animation.Update(direction.ordinal)

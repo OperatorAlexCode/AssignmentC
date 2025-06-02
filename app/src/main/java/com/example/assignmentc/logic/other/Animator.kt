@@ -1,4 +1,4 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.other
 
 import android.content.Context
 import android.graphics.Bitmap

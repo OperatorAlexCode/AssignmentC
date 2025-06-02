@@ -1,4 +1,4 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.other
 
 class Tile {
     val XPos: Int

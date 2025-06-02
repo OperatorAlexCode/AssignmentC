@@ -6,9 +6,9 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.assignmentc.logic.Direction
+import com.example.assignmentc.logic.other.Direction
 import com.example.assignmentc.logic.GameManager
-import com.example.assignmentc.logic.Maze
+import com.example.assignmentc.logic.other.Maze
 
 class GameScreenViewModel(
     application: Application,

@@ -1,11 +1,12 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.items
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.media.MediaPlayer
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import com.example.assignmentc.R
+import com.example.assignmentc.logic.playerandenemies.Enemy
+import com.example.assignmentc.logic.GameManager
+import com.example.assignmentc.logic.other.Tile
 
 sealed class Item(open var context: Context, open var tile: Tile) {
 

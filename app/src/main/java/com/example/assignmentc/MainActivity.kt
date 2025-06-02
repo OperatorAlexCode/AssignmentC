@@ -9,10 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.assignmentc.logic.BlockMaze
-import com.example.assignmentc.logic.LineMaze
-import com.example.assignmentc.logic.Maze
-import com.example.assignmentc.logic.TempleMaze
+import com.example.assignmentc.logic.other.BlockMaze
+import com.example.assignmentc.logic.other.LineMaze
+import com.example.assignmentc.logic.other.Maze
+import com.example.assignmentc.logic.other.TempleMaze
 import com.example.assignmentc.ui.navigation.Screen
 import com.example.assignmentc.ui.screens.DeathScreen
 import com.example.assignmentc.ui.screens.GameScreen

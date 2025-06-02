@@ -1,8 +1,11 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.items
 
 import android.content.Context
 import android.media.MediaPlayer
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.playerandenemies.Enemy
+import com.example.assignmentc.logic.GameManager
+import com.example.assignmentc.logic.other.Tile
 
 class TrapItem(
     override var context: Context,

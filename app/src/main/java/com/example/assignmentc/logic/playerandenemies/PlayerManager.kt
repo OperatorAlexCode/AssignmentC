@@ -1,6 +1,8 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.playerandenemies
 
 import android.content.Context
+import com.example.assignmentc.logic.other.Direction
+import com.example.assignmentc.logic.other.Maze
 
 class PlayerManager(var context: Context, private val maze: Maze) {
     var player: Player? = null

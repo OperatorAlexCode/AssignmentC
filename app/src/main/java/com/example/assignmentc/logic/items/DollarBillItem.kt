@@ -1,8 +1,10 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.items
 
 import android.content.Context
-import android.media.MediaPlayer
 import com.example.assignmentc.R
+import com.example.assignmentc.logic.playerandenemies.Enemy
+import com.example.assignmentc.logic.GameManager
+import com.example.assignmentc.logic.other.Tile
 
 class DollarBillItem(override var context: Context,override var tile: Tile) : Item(context,tile) {
     override val isPlaced: Boolean get() = true

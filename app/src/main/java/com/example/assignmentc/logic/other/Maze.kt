@@ -1,4 +1,4 @@
-package com.example.assignmentc.logic
+package com.example.assignmentc.logic.other
 
 import kotlin.math.floor
 

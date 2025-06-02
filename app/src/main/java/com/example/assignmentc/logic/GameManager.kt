@@ -1,10 +1,19 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import com.example.assignmentc.logic.items.Item
+import com.example.assignmentc.logic.items.ItemManager
+import com.example.assignmentc.logic.items.TrapItem
+import com.example.assignmentc.logic.other.Direction
+import com.example.assignmentc.logic.other.Maze
+import com.example.assignmentc.logic.other.Tile
+import com.example.assignmentc.logic.playerandenemies.Enemy
+import com.example.assignmentc.logic.playerandenemies.EnemyManager
+import com.example.assignmentc.logic.playerandenemies.Player
 
 class GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
-    var EnemyManager = EnemyManager(context,maze,this)
+    var EnemyManager = EnemyManager(context, maze, this)
 
 
     val itemManager = ItemManager(maze, context, this)
@@ -19,7 +28,7 @@ class GameManager(var context: Context, private var maze: Maze) {
     fun StartGame() {
         score = 0
         spawnPlayer()
-        EnemyManager = EnemyManager(context,maze,this)
+        EnemyManager = EnemyManager(context, maze, this)
         EnemyManager.spawnEnemies(1)
     }
 
@@ -64,7 +73,7 @@ class GameManager(var context: Context, private var maze: Maze) {
     fun spawnPlayer() {
         //val nonWallTiles = maze.Tiles.flatten().filter { !it.IsWall }
         //locationTile = maze.Tiles[0][0]
-        player = Player(context,maze.Tiles[maze.PlayerStart.XPos][maze.PlayerStart.YPos])
+        player = Player(context, maze.Tiles[maze.PlayerStart.XPos][maze.PlayerStart.YPos])
         player?.HealMax()
     }
 
@@ -136,7 +145,7 @@ class GameManager(var context: Context, private var maze: Maze) {
         player?.Hurt(amount)
     }
 
-    fun getHeldItem():Item? {
+    fun getHeldItem(): Item? {
         return itemManager.heldItem
     }
 }

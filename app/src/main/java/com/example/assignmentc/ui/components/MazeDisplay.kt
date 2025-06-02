@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
@@ -20,12 +19,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import com.example.assignmentc.R
-import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.GameManager
-import com.example.assignmentc.logic.Maze
-import com.example.assignmentc.logic.PlayerManager
-import android.graphics.BitmapFactory
-import android.graphics.RectF
+import com.example.assignmentc.logic.other.Maze
 import androidx.compose.ui.platform.LocalContext
 
 
