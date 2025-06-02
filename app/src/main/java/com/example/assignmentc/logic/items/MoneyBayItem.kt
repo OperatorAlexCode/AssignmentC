@@ -16,6 +16,6 @@ class MoneyBagItem(override var context: Context,override var tile: Tile) : Item
 
     override fun onPlayerPickup(gameManager: GameManager) {
         //pickupSfx.start()
-        gameManager.increaseScore(30)
+        gameManager.increaseScore(50)
     }
 }

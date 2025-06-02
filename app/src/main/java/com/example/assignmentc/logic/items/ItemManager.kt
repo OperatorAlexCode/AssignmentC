@@ -39,6 +39,8 @@ class ItemManager(
     val pickupSfx: MediaPlayer = MediaPlayer.create(context,R.raw.slip)
     val scoreSfx: MediaPlayer = MediaPlayer.create(context,R.raw.scoreup)
 
+    val enemyKillReward: Int = 30
+
     /**
      * Attempt to pick up any item on `tile`. Priority:
      *   1) If there is a “score‐only” item (DollarBillItem, DollarStackItem, MoneyBagItem),
@@ -104,16 +106,22 @@ class ItemManager(
                         .filter { e -> blastTiles.contains(e.currentTile) }
                     for (enemy in enemiesToKill) {
                         gameManager.EnemyManager.removeEnemy(enemy)
-                        gameManager.increaseScore(20)
+                        gameManager.increaseScore(enemyKillReward)
                     }
+
+                    for (tile in blastTiles)
+                        gameManager.addEffect(Explosion(context,tile,2f))
+
+                    toRemove += item
                 }
 
                 // If explosion animation is complete, schedule removal
-                if (finished) {
+                /*if (finished) {
                     toRemove += item
-                }
+                }*/
             }
         }
+
         toRemove.forEach { remove(it) }
         return toRemove.size
     }

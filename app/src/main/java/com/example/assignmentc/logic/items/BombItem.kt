@@ -74,11 +74,11 @@ class BombItem(
                 false
             }
 
-            exploding -> {
+            /*exploding -> {
                 // Play explosion animation frames
                 explosionAnimator.Update()
                 explosionAnimator.CurrentFrame == explosionAnimator.SheetColumns - 1
-            }
+            }*/
 
             else -> false
         }

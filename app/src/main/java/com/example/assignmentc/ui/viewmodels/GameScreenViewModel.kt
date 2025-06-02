@@ -9,12 +9,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.assignmentc.logic.other.Direction
 import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.other.Maze
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class GameScreenViewModel(
     application: Application,
     initialMaze: Maze
 ) : AndroidViewModel(application) {
 
+    val scope: CoroutineScope = CoroutineScope(Dispatchers.Main)
     private var _maze = mutableStateOf<Maze>(initialMaze)
     val maze: State<Maze> = _maze
 
@@ -30,11 +36,11 @@ class GameScreenViewModel(
         }
     }
 
-    private val _hasHeldItem = mutableStateOf(gameManager.itemManager.heldItem != null)
-    val hasHeldItem: State<Boolean> = _hasHeldItem
+    //private val _hasHeldItem = mutableStateOf(gameManager.itemManager.heldItem != null)
+    //val hasHeldItem: State<Boolean> = _hasHeldItem
 
-    private val _heldItemRes = mutableStateOf<Int?>(gameManager.itemManager.heldItem?.spriteRes())
-    val heldItemRes: State<Int?> = _heldItemRes
+    //private val _heldItemRes = mutableStateOf<Int?>(gameManager.itemManager.heldItem?.spriteRes())
+    //val heldItemRes: State<Int?> = _heldItemRes
 
     init {
         //playerManager.spawnPlayer()
@@ -45,6 +51,14 @@ class GameScreenViewModel(
     fun startGame() {
         _isGameOver.value = false
         gameManager.StartGame(_maze.value)
+        scope.launch {
+            while (!_isGameOver.value) {
+                if (gameManager.effects.count() > 0)
+                    UpdateMaze()
+
+                delay(100)
+            }
+        }
     }
 
     /*fun EndGame() {
@@ -60,14 +74,17 @@ class GameScreenViewModel(
         }*/
 
         gameManager.movePlayer(direction)
-        _maze.value = _maze.value.copySelf()
+        UpdateMaze()
         gameManager.Update()
 
         // Refresh held‐item state
-        _hasHeldItem.value = (gameManager.itemManager.heldItem != null)
-        _heldItemRes.value = gameManager.itemManager.heldItem?.spriteRes()
+        //_hasHeldItem.value = (gameManager.itemManager.heldItem != null)
+        //_heldItemRes.value = gameManager.itemManager.heldItem?.spriteRes()
     }
 
+    fun UpdateMaze() {
+        _maze.value = _maze.value.copySelf()
+    }
 
     fun useItem() {
         // Delegate to GameManager, which calls ItemManager.useHeldItem(...)
@@ -76,8 +93,8 @@ class GameScreenViewModel(
             _maze.value = gameManager.currentMaze.copySelf()
         }
         // Refresh held‐item state
-        _hasHeldItem.value = (gameManager.itemManager.heldItem != null)
-        _heldItemRes.value = gameManager.itemManager.heldItem?.spriteRes()
+        //_hasHeldItem.value = (gameManager.itemManager.heldItem != null)
+        //_heldItemRes.value = gameManager.itemManager.heldItem?.spriteRes()
     }
 
     //fun getPlayerManager(): PlayerManager = playerManager

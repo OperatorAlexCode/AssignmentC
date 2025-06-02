@@ -16,6 +16,6 @@ class DollarStackItem(override var context: Context,override var tile: Tile) : I
 
     override fun onPlayerPickup(gameManager: GameManager) {
         //pickupSfx.start()
-        gameManager.increaseScore(15)
+        gameManager.increaseScore(25)
     }
 }

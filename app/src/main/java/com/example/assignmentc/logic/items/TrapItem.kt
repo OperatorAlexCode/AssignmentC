@@ -24,7 +24,7 @@ class TrapItem(
     override fun onTrigger(gameManager: GameManager, triggeringEnemy: Enemy) {
         activateSfx.start()
         gameManager.EnemyManager.removeEnemy(triggeringEnemy)
-        gameManager.increaseScore(10)
+        gameManager.increaseScore(30)
         gameManager.itemManager.remove(this)
     }
 

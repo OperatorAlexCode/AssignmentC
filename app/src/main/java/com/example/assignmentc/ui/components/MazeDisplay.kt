@@ -22,6 +22,7 @@ import com.example.assignmentc.R
 import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.other.Maze
 import androidx.compose.ui.platform.LocalContext
+import com.example.assignmentc.logic.items.Effect
 
 
 @Composable
@@ -106,7 +107,7 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
 }
 
 @Composable
-fun MazeDisplay(modifier: Modifier,toDisplay: Maze, gameManager: GameManager/*playerManager: PlayerManager, enemyManager: EnemyManager*/) {
+fun MazeDisplay(modifier: Modifier,toDisplay: Maze, gameManager: GameManager) {
     val dimension = 360.dp
     val margin = 0.dp
 
@@ -191,6 +192,20 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze, gameManager: GameManager/*pl
                                         contentDescription = "",
                                         modifier = Modifier.fillMaxSize(),
                                         filterQuality = FilterQuality.None)
+                                }
+                            }
+
+                            if (gameManager.isEffectOnTile(x,y))
+                            {
+                                var effect = gameManager.getEffectOnTile(x,y)
+
+                                effect?.let { e ->
+                                    e.GetSprite()?.let {
+                                        Image(bitmap = it.asImageBitmap(),
+                                            contentDescription = "",
+                                            modifier = Modifier.fillMaxSize(),
+                                            filterQuality = FilterQuality.None)
+                                    }
                                 }
                             }
                         }

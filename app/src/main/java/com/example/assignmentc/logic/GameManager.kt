@@ -1,6 +1,7 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import com.example.assignmentc.logic.items.Effect
 import com.example.assignmentc.logic.items.Item
 import com.example.assignmentc.logic.items.ItemManager
 import com.example.assignmentc.logic.items.TrapItem
@@ -15,7 +16,6 @@ class GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
     var EnemyManager = EnemyManager(context, maze, this)
 
-
     val itemManager = ItemManager(maze, context, this)
 
     var score: Int = 0
@@ -24,6 +24,8 @@ class GameManager(var context: Context, private var maze: Maze) {
     val maxAmountEnemies = 10
 
     var onGameEnd: (() -> Unit)? = null
+
+    var effects: MutableList<Effect> = mutableListOf()
 
     fun StartGame() {
         score = 0
@@ -64,6 +66,7 @@ class GameManager(var context: Context, private var maze: Maze) {
 
         itemManager.updateBombs()
         itemManager.onNewTurn()
+        effects.removeAll { e -> e.finished }
     }
 
     fun EndGame() {
@@ -137,6 +140,14 @@ class GameManager(var context: Context, private var maze: Maze) {
         return EnemyManager.enemies.find { e -> e.isOnTile(x,y) }
     }
 
+    fun isEffectOnTile(x:Int,y:Int):Boolean {
+        return effects.any { e -> e.tile.XPos == x && e.tile.YPos == y }
+    }
+
+    fun getEffectOnTile(x:Int,y:Int): Effect? {
+        return effects.find { e -> e.tile.XPos == x && e.tile.YPos == y }
+    }
+
     fun increaseScore(gainedScore:Int) {
         score += gainedScore
     }
@@ -147,5 +158,10 @@ class GameManager(var context: Context, private var maze: Maze) {
 
     fun getHeldItem(): Item? {
         return itemManager.heldItem
+    }
+
+    fun addEffect(newEffect: Effect) {
+        newEffect.Start()
+        effects.add(newEffect)
     }
 }
