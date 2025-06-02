@@ -24,6 +24,9 @@ class GameScreenViewModel(
     private var _maze = mutableStateOf<Maze>(initialMaze)
     val maze: State<Maze> = _maze
 
+    private val _playerHealth = mutableStateOf(3)
+    val playerHealth: State<Int> = _playerHealth
+
     //private val playerManager = PlayerManager(application, _maze.value)
     //private val enemyManager = EnemyManager(application, _maze.value, playerManager)
 
@@ -51,6 +54,7 @@ class GameScreenViewModel(
     fun startGame() {
         _isGameOver.value = false
         gameManager.StartGame(_maze.value)
+        _playerHealth.value = gameManager.player?.health ?: 3
         scope.launch {
             while (!_isGameOver.value) {
                 if (gameManager.effects.count() > 0)
@@ -84,6 +88,7 @@ class GameScreenViewModel(
 
     fun UpdateMaze() {
         _maze.value = _maze.value.copySelf()
+        _playerHealth.value = gameManager.player?.health ?: 0
     }
 
     fun useItem() {

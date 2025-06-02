@@ -3,6 +3,7 @@ package com.example.assignmentc.ui.screens
 import android.media.MediaPlayer
 import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmentc.R
 import com.example.assignmentc.logic.other.Maze
+import com.example.assignmentc.ui.components.HealthBar
 import com.example.assignmentc.ui.components.ItemBox
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
@@ -49,61 +51,42 @@ fun GameScreen(
             onNavigateToDeathScreen(score)
         }
     }
-    /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
-    playerManager.spawnPlayer()
-    val enemyManager: EnemyManager by remember { mutableStateOf(EnemyManager(context,maze)) }
-    enemyManager.spawnEnemies()*/
 
-    //val gameManager by remember { mutableStateOf(GameManager(context,maze)) }
-    //gameManager.StartGame()
     val gameManager = viewModel.getGameManager()
-    //viewModel.StartGame(maze)
-
-    //val playerManager = viewModel.getPlayerManager()
-    //val enemyManager = viewModel.getEnemyManager()
-
-    var walksfx = MediaPlayer.create(context,R.raw.footstep)
+    var walksfx = MediaPlayer.create(context, R.raw.footstep)
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            ScoreDisplay(score = gameManager.score)
-
-            //Spacer(modifier = Modifier.height(10.dp))
-
-            MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Row {
-                MovementButtons(
-                    onMove = { direction ->
-                        //playerManager.movePlayer(direction)
-                        //maze = maze.copySelf()
-                        //enemyManager.moveAllEnemies()
-
-                        //gameManager.movePlayer(direction)
-                        //maze = maze.copySelf()
-                        //gameManager.Update()
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            // Main content (centered)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                ScoreDisplay(score = gameManager.score)
+                MazeDisplay(Modifier.padding(16.dp), maze, gameManager)
+                Spacer(modifier = Modifier.height(30.dp))
+                Row {
+                    MovementButtons(onMove = { direction ->
                         viewModel.movePlayer(direction)
-
-                        if (walksfx.isPlaying)
-                            walksfx.seekTo(0)
-                        else
-                            walksfx.start()
-                    }
-                )
-
-                Spacer(Modifier.size(30.dp))
-
-                ItemBox(item = gameManager.getHeldItem(),
-                    onClick = { gameManager.useHeldItem() })
+                        if (walksfx.isPlaying) walksfx.seekTo(0)
+                        else walksfx.start()
+                    })
+                    Spacer(Modifier.size(30.dp))
+                    ItemBox(
+                        item = gameManager.getHeldItem(),
+                        onClick = { gameManager.useHeldItem() }
+                    )
+                }
             }
+
+            // Health bar (top center overlay)
+            HealthBar(
+                health = viewModel.playerHealth.value,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 16.dp)
+            )
         }
     }
 }
