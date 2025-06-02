@@ -30,6 +30,12 @@ class GameScreenViewModel(
         }
     }
 
+    private val _hasHeldItem = mutableStateOf(gameManager.itemManager.heldItem != null)
+    val hasHeldItem: State<Boolean> = _hasHeldItem
+
+    private val _heldItemRes = mutableStateOf<Int?>(gameManager.itemManager.heldItem?.spriteRes())
+    val heldItemRes: State<Int?> = _heldItemRes
+
     init {
         //playerManager.spawnPlayer()
         //enemyManager.spawnEnemies()
@@ -56,6 +62,22 @@ class GameScreenViewModel(
         gameManager.movePlayer(direction)
         _maze.value = _maze.value.copySelf()
         gameManager.Update()
+
+        // Refresh held‐item state
+        _hasHeldItem.value = (gameManager.itemManager.heldItem != null)
+        _heldItemRes.value = gameManager.itemManager.heldItem?.spriteRes()
+    }
+
+
+    fun useItem() {
+        // Delegate to GameManager, which calls ItemManager.useHeldItem(...)
+        val didUse = gameManager.useHeldItem()
+        if (didUse) {
+            _maze.value = gameManager.currentMaze.copySelf()
+        }
+        // Refresh held‐item state
+        _hasHeldItem.value = (gameManager.itemManager.heldItem != null)
+        _heldItemRes.value = gameManager.itemManager.heldItem?.spriteRes()
     }
 
     //fun getPlayerManager(): PlayerManager = playerManager

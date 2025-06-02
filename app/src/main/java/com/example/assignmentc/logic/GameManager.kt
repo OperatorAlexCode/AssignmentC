@@ -6,6 +6,9 @@ class GameManager(var context: Context, private var maze: Maze) {
     var player: Player? = null
     var EnemyManager = EnemyManager(context,maze,this)
 
+
+    val itemManager = ItemManager(maze, context, this)
+
     var score: Int = 0
     private var playerMoveCount: Int = 0
     val maxAmountEnemies = 10
@@ -36,6 +39,22 @@ class GameManager(var context: Context, private var maze: Maze) {
         }
 
         score+=1
+        EnemyManager.moveAllEnemies()
+
+        // Changed here
+        val enemiesSnapshot = EnemyManager.enemies.toList()
+        enemiesSnapshot.forEach { enemy ->
+            val eTile = enemy.getLocationTile()
+            val trapsHere = itemManager.items
+                .filterIsInstance<TrapItem>()
+                .filter { it.tile == eTile && it.isPlaced }
+            trapsHere.forEach { trap ->
+                trap.onTrigger(this, enemy)
+            }
+        }
+
+        itemManager.updateBombs()
+        itemManager.onNewTurn()
     }
 
     fun EndGame() {
@@ -67,6 +86,9 @@ class GameManager(var context: Context, private var maze: Maze) {
 
         player?.Update(direction)
 
+        // Try picking up any ground item on the new tile:
+        player?.currentTile?.let { itemManager.tryPickUp(it) }
+
         playerMoveCount++
         if (playerMoveCount >= 10) { //5 may be changed for balancing purposes
             if (EnemyManager.enemies.size < maxAmountEnemies) {
@@ -76,7 +98,15 @@ class GameManager(var context: Context, private var maze: Maze) {
         }
     }
 
-    fun getPlayerLocation() : Tile? {
+    fun useHeldItem(): Boolean {
+        val pTile = player?.currentTile ?: return false
+        return itemManager.useHeldItem(pTile)
+    }
+
+    val currentMaze: Maze
+        get() = maze
+
+    fun getPlayerLocation(): Tile? {
         return player?.currentTile
     }
 

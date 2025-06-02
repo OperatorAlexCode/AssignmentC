@@ -24,6 +24,10 @@ import com.example.assignmentc.logic.EnemyManager
 import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.logic.PlayerManager
+import android.graphics.BitmapFactory
+import android.graphics.RectF
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun MazeDisplay(modifier: Modifier,toDisplay: Maze) {
@@ -158,6 +162,19 @@ fun MazeDisplay(modifier: Modifier,toDisplay: Maze, gameManager: GameManager/*pl
                                 contentDescription = "",
                                 modifier = Modifier.fillMaxSize(),
                                 filterQuality = FilterQuality.None)
+
+                            // Changed here, imagebitmap to item.getbitmap
+                            val itemsHere = gameManager.itemManager.items
+                                .filter { it.tile.XPos == x && it.tile.YPos == y }
+                            itemsHere.forEach { item ->
+                                Image(
+                                    // load the banana or peel bitmap from resources
+                                    bitmap = item.getBitmap(LocalContext.current),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    filterQuality = FilterQuality.None
+                                )
+                            }
 
                             // Draw other sprites here
                             if (gameManager.isPlayerOnTile(x,y))

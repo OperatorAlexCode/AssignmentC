@@ -97,6 +97,9 @@ fun GameScreen(
                         else
                             walksfx.start()
                     },
+                    onUseItem = {viewModel.useItem()},
+                    onShowLeaderboard = onNavigateToLeaderboard,
+                    useEnabled = viewModel.hasHeldItem.value
                 )
 
                 Spacer(Modifier.size(30.dp))
