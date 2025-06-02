@@ -136,6 +136,10 @@ class ItemManager(
         _items += BombItem(context,at)
     }
 
+    fun spawnMedkit(at: Tile) {
+        _items += MedKit(context,at)
+    }
+
     // Remove an item when it’s picked up or triggered
     fun remove(item: Item) {
         _items.remove(item)
@@ -196,9 +200,19 @@ class ItemManager(
                     }
 
                 else{
-                    when ((1..2).random()) {
-                        1 -> spawnTrap(spawnTile)
-                        2 -> spawnBomb(spawnTile)
+                    gameManager.player?.let {
+                        if (it.health < it.maxHealth)
+                            when ((1..3).random()) {
+                                1 -> spawnTrap(spawnTile)
+                                2 -> spawnBomb(spawnTile)
+                                3 -> spawnMedkit(spawnTile)
+                            }
+
+                        else
+                            when ((1..2).random()) {
+                                1 -> spawnTrap(spawnTile)
+                                2 -> spawnBomb(spawnTile)
+                            }
                     }
                 }
             }

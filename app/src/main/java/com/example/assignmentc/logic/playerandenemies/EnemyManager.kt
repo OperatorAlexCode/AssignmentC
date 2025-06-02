@@ -56,13 +56,17 @@ class EnemyManager(private var context: Context, private val maze: Maze, var gam
         val playerTile = gameManager.player?.currentTile ?: return
 
         // Snapshot of occupied tiles before movement
-        val occupiedTiles = enemies.map { it.currentTile }.toSet()
+        var occupiedTiles = enemies.map { it.currentTile }.toSet()
 
         for (enemy in enemies) {
             enemy.move(
                 playerTile,
                 isTileOccupied = { tile ->
-                    tile != enemy.currentTile && occupiedTiles.contains(tile)
+                    var isOccupied = tile != enemy.currentTile && occupiedTiles.contains(tile)
+
+                    occupiedTiles = occupiedTiles.plus(tile)
+
+                    isOccupied
                 },
                 onHitPlayer = {
                     hitSfx.start()
