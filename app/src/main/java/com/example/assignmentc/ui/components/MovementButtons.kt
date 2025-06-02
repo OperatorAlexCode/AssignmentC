@@ -27,7 +27,7 @@ fun MovementButtons(
     modifier: Modifier = Modifier,
     onMove: (Direction) -> Unit,
     onUseItem: () -> Unit,
-    onShowLeaderboard: (Int) -> Unit,
+    onShowLeaderboard: () -> Unit,
     useEnabled: Boolean
 ) {
     val scope = rememberCoroutineScope()

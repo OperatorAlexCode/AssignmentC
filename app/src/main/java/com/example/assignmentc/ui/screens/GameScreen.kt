@@ -23,12 +23,11 @@ import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
-import androidx.compose.foundation.layout.Row
 
 
 @Composable
 fun GameScreen(
-    onNavigateToLeaderboard: (Int) -> Unit,
+    onNavigateToLeaderboard: () -> Unit,
     initialMaze: Maze,
     viewModel: GameScreenViewModel = viewModel(
         factory = GameScreenViewModelFactory(
@@ -43,8 +42,7 @@ fun GameScreen(
 
     LaunchedEffect(isGameOver) {
         if (isGameOver) {
-            val score = viewModel.getGameManager().score
-            onNavigateToDeathScreen(score)
+            onNavigateToLeaderboard()
         }
     }
     /*val playerManager: PlayerManager by remember { mutableStateOf(PlayerManager(context,maze)) }
@@ -70,14 +68,9 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
-            ScoreDisplay(gameManager = gameManager)
-
             MazeDisplay(Modifier.padding(16.dp), maze, gameManager/*playerManager,enemyManager*/)
             Spacer(modifier = Modifier.height(30.dp))
-
-            Row {
-                MovementButtons(
+            MovementButtons(
                 onMove = { direction ->
                     //playerManager.movePlayer(direction)
                     //maze = maze.copySelf()
@@ -96,7 +89,7 @@ fun GameScreen(
                 onUseItem = {viewModel.useItem()},
                 onShowLeaderboard = onNavigateToLeaderboard,
                 useEnabled = viewModel.hasHeldItem.value
-            )}
+            )
 
         }
     }

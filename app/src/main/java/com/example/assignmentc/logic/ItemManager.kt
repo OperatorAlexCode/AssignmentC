@@ -14,15 +14,15 @@ class ItemManager(
 
     var heldItem: Item? = null
 
-    private val trapSpawnIntervalTurns = 5    // spawn a new banana‐trap every 5 turns
+    private val trapSpawnIntervalTurns = 7    // spawn a new banana‐trap every 5 turns
     private var turnsSinceLastTrap = 0
 
     // Separate counter for bombs
-    private val bombSpawnIntervalTurns = 10   // spawn a new bomb every 10 turns
+    private val bombSpawnIntervalTurns = 7   // spawn a new bomb every 10 turns
     private var turnsSinceLastBomb = 0
 
     // Counter for score‐only pickups
-    private val coinSpawnIntervalTurns = 7    // spawn a coin every 3 turns
+    private val coinSpawnIntervalTurns = 5    // spawn a coin every 3 turns
     private var turnsSinceLastCoin = 0
 
     // Optional cap of banana traps, for testing purposes
@@ -42,7 +42,7 @@ class ItemManager(
             it.tile == tile && (it is DollarBillItem || it is DollarStackItem || it is MoneyBagItem)
         }
         if (scorePickup != null) {
-            // Award points (onPlayerPickup) and remove from the world
+            // Award points and remove
             scorePickup.onPlayerPickup(gameManager)
             remove(scorePickup)
             return true
@@ -50,7 +50,6 @@ class ItemManager(
 
         // 2) Otherwise, look for an un‐placed item (trap or bomb) at this tile
         val pickup = _items.firstOrNull { it.tile == tile && !it.isPlaced } ?: return false
-        // Drop old held item (if any), then hold this new one
         heldItem?.let { remove(it) }
         heldItem = pickup
         remove(pickup)
@@ -81,25 +80,22 @@ class ItemManager(
         val toRemove = mutableListOf<BombItem>()
         for (item in _items) {
             if (item is BombItem) {
-                // Before calling update(), check if the bomb is about to enter its “exploding” state
                 val wasPrimed = item.isPrimed
                 val finished = item.update()
 
-                // If we just transitioned from primed→exploding, burst the bomb:
                 if (wasPrimed && item.isExploding) {
-                    // 1) Compute all tiles within blast radius
+                    // Compute blast radius tiles
                     val blastTiles = item.getBlastTiles(maze)
-
-                    // 2) Remove any enemy in range, award points
+                    // Remove any enemy in range, award points
                     val enemiesToKill = gameManager.EnemyManager.enemies
                         .filter { e -> blastTiles.contains(e.currentTile) }
                     for (enemy in enemiesToKill) {
                         gameManager.EnemyManager.removeEnemy(enemy)
-                        gameManager.increaseScore(20)  // 20 points per enemy
+                        gameManager.increaseScore(20)
                     }
                 }
 
-                // If the explosion animation is now fully finished, schedule removal
+                // If explosion animation is complete, schedule removal
                 if (finished) {
                     toRemove += item
                 }
@@ -124,10 +120,6 @@ class ItemManager(
         _items.remove(item)
     }
 
-    // Find the first “pickup” (not yet placed) item on this tile
-    private fun findPickupOn(tile: Tile): Item? =
-        _items.firstOrNull { it.tile == tile && !it.isPlaced }
-
     /**
      * Called once per game turn. Advances all three counters (for traps, bombs, and coins)
      * and spawns each type when its interval is reached:
@@ -140,42 +132,56 @@ class ItemManager(
         turnsSinceLastBomb++
         turnsSinceLastCoin++
 
-        // 1) Trap logic (every 5 turns, up to cap)
+        // (1) Trap logic (every 5 turns, up to cap)
         val groundTrapCount = _items.count { it is TrapItem && !it.isPlaced }
         if (turnsSinceLastTrap >= trapSpawnIntervalTurns && groundTrapCount < maxGroundTraps) {
-            val spawnTile = chooseSpawnTile()
-            spawnTrap(spawnTile)
+            chooseSpawnTile()?.let { spawnTrap(it) }
             turnsSinceLastTrap = 0
         }
 
-        // 2) Bomb logic (every 10 turns)
+        // (2) Bomb logic (every 10 turns)
         if (turnsSinceLastBomb >= bombSpawnIntervalTurns) {
-            val bombTile = chooseSpawnTile()
-            spawnBomb(bombTile)
+            chooseSpawnTile()?.let { spawnBomb(it) }
             turnsSinceLastBomb = 0
         }
 
-        // 3) Coin logic (every 3 turns)
+        // (3) Coin logic (every 3 turns)
         if (turnsSinceLastCoin >= coinSpawnIntervalTurns) {
-            val spawnTile = chooseSpawnTile()
-            when ((1..3).random()) {
-                1 -> _items += DollarBillItem(spawnTile)
-                2 -> _items += DollarStackItem(spawnTile)
-                else -> _items += MoneyBagItem(spawnTile)
+            chooseSpawnTile()?.let { spawnTile ->
+                when ((1..3).random()) {
+                    1 -> _items += DollarBillItem(spawnTile)
+                    2 -> _items += DollarStackItem(spawnTile)
+                    else -> _items += MoneyBagItem(spawnTile)
+                }
             }
             turnsSinceLastCoin = 0
         }
     }
 
-    private fun chooseSpawnTile(): Tile {
+    /**
+     * Choose a random tile in the central region that:
+     *  - is not a wall
+     *  - is not already occupied by another Item (_items)
+     * Returns null if no suitable tile is found.
+     */
+    private fun chooseSpawnTile(): Tile? {
         val size = maze.Size
         val min = size / 4
         val max = size * 3 / 4
 
-        return maze.Tiles.flatten()
-            .filter { !it.IsWall }                    // no walls
-            .filter { it.XPos in min..max && it.YPos in min..max } // central quadrant
-            .shuffled()
-            .first()
+        // Build a set of occupied Tile references
+        val occupiedTiles = _items.map { it.tile }.toSet()
+
+        // Filter to only valid, unoccupied tiles
+        val candidates = maze.Tiles.flatten()
+            .filter { !it.IsWall }
+            .filter { it.XPos in min..max && it.YPos in min..max }
+            .filter { !occupiedTiles.contains(it) }
+
+        return if (candidates.isNotEmpty()) {
+            candidates.shuffled().first()
+        } else {
+            null
+        }
     }
 }
