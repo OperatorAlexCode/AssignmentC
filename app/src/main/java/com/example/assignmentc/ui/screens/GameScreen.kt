@@ -2,7 +2,6 @@ package com.example.assignmentc.ui.screens
 
 import android.media.MediaPlayer
 import android.app.Application
-import android.content.ClipData
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +24,7 @@ import com.example.assignmentc.logic.Maze
 import com.example.assignmentc.ui.components.ItemBox
 import com.example.assignmentc.ui.components.MazeDisplay
 import com.example.assignmentc.ui.components.MovementButtons
+import com.example.assignmentc.ui.components.ScoreDisplay
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModel
 import com.example.assignmentc.ui.viewmodels.GameScreenViewModelFactory
 

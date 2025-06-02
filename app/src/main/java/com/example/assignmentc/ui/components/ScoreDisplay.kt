@@ -1,4 +1,4 @@
-package com.example.assignmentc.ui.screens
+package com.example.assignmentc.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.example.assignmentc.logic.GameManager
 
 @Composable
 fun ScoreDisplay(modifier: Modifier = Modifier,score:Int)

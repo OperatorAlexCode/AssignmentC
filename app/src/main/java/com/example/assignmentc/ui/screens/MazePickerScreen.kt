@@ -2,6 +2,7 @@ package com.example.assignmentc.ui.screens
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -130,7 +131,10 @@ fun MazePickerScreen(
                     description = "Select",
                     spriteSheet = buttonSpriteSheet,
                     button = 5,
-                    onClick = { onMazeSelected(currentMaze) })
+                    onClick = {
+                        onMazeSelected(currentMaze)
+                        MediaPlayer.create(context,R.raw.scoreup).start()
+                    })
             }
         }
     }

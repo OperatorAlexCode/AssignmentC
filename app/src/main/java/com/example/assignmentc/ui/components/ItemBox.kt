@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +30,9 @@ import com.example.assignmentc.logic.Item
 @Composable
 fun ItemBox(modifier: Modifier = Modifier, item: Item?, onClick: () -> Unit)
 {
+    //var displayItem by remember { mutableStateOf<Item?>(item) }
+    var itemUsed by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -34,7 +41,7 @@ fun ItemBox(modifier: Modifier = Modifier, item: Item?, onClick: () -> Unit)
 
         Box(modifier = Modifier.size(80.dp).background(Color.Black)) {
 
-            if (item!= null)
+            if (item != null && !itemUsed)
             {
                 item?.let {
                     Image(bitmap = it.getBitmap(LocalContext.current),
@@ -51,6 +58,9 @@ fun ItemBox(modifier: Modifier = Modifier, item: Item?, onClick: () -> Unit)
             description = "Use Item",
             spriteSheet = BitmapFactory.decodeResource(LocalContext.current.resources,R.drawable.buttons),
             button = 0,
-            onClick = onClick)
+            onClick = {
+                onClick()
+                itemUsed = true
+            })
     }
 }
