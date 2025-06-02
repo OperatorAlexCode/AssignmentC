@@ -79,7 +79,7 @@ fun PlayerSprite(modifier: Modifier = Modifier) {
         Bitmap.createBitmap(
             spriteSheet,
             frameWidth * 1,
-            frameHeight * 2,
+            frameHeight * 2+1,
             frameWidth,
             frameHeight
         )

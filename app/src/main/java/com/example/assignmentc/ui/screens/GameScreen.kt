@@ -72,7 +72,7 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            ScoreDisplay(gameManager = gameManager)
+            ScoreDisplay(score = gameManager.score)
 
             //Spacer(modifier = Modifier.height(10.dp))
 

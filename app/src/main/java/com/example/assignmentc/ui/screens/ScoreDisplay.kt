@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 import com.example.assignmentc.logic.GameManager
 
 @Composable
-fun ScoreDisplay(modifier: Modifier = Modifier,gameManager: GameManager)
+fun ScoreDisplay(modifier: Modifier = Modifier,score:Int)
 {
     Column(
         modifier = modifier,
@@ -24,6 +24,6 @@ fun ScoreDisplay(modifier: Modifier = Modifier,gameManager: GameManager)
 
         Text(textAlign = TextAlign.Center,
             fontSize = 20.sp,
-            text = gameManager.score.toString())
+            text = score.toString())
     }
 }

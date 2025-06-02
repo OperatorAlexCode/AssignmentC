@@ -13,9 +13,10 @@ class GameManager(var context: Context, private var maze: Maze) {
     var onGameEnd: (() -> Unit)? = null
 
     fun StartGame() {
+        score = 0
         spawnPlayer()
         EnemyManager = EnemyManager(context,maze,this)
-        EnemyManager.spawnEnemies(3)
+        EnemyManager.spawnEnemies(1)
     }
 
     fun StartGame(maze: Maze) {
@@ -24,6 +25,8 @@ class GameManager(var context: Context, private var maze: Maze) {
     }
 
     fun Update() {
+        EnemyManager.moveAllEnemies()
+
         player?.health?.let {
             if (it <= 0)
             {
@@ -32,7 +35,7 @@ class GameManager(var context: Context, private var maze: Maze) {
             }
         }
 
-        EnemyManager.moveAllEnemies()
+        score+=1
     }
 
     fun EndGame() {
@@ -43,6 +46,7 @@ class GameManager(var context: Context, private var maze: Maze) {
         //val nonWallTiles = maze.Tiles.flatten().filter { !it.IsWall }
         //locationTile = maze.Tiles[0][0]
         player = Player(context,maze.Tiles[maze.PlayerStart.XPos][maze.PlayerStart.YPos])
+        player?.HealMax()
     }
 
     fun movePlayer(direction: Direction) {
@@ -64,7 +68,7 @@ class GameManager(var context: Context, private var maze: Maze) {
         player?.Update(direction)
 
         playerMoveCount++
-        if (playerMoveCount >= 5) { //5 may be changed for balancing purposes
+        if (playerMoveCount >= 10) { //5 may be changed for balancing purposes
             if (EnemyManager.enemies.size < maxAmountEnemies) {
                 EnemyManager.spawnEnemies(1)
                 playerMoveCount = 0

@@ -6,8 +6,8 @@ import com.example.assignmentc.R
 
 class Player(private var context: Context, var currentTile: Tile?) {
     //var item: Item? = null //TODO: implement item "holding"
-    var health: Int = 3
-    var maxHealth: Int = 1
+    var health: Int = 0
+    var maxHealth: Int = 3
     var animation:Animator = Animator(context,R.drawable.player)
 
     fun Update(direction: Direction) {
@@ -30,5 +30,9 @@ class Player(private var context: Context, var currentTile: Tile?) {
     fun Heal(hp:Int = 1) {
         health += hp
         health = health.coerceIn(0,maxHealth)
+    }
+
+    fun HealMax() {
+        health = maxHealth
     }
 }

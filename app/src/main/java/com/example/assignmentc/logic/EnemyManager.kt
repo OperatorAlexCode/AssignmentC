@@ -1,9 +1,12 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import android.media.MediaPlayer
+import com.example.assignmentc.R
 
 class EnemyManager(private var context: Context,private val maze: Maze, var gameManager: GameManager) {
     var enemies: MutableList<Enemy> = mutableListOf()
+    var hitSfx = MediaPlayer.create(context,R.raw.hit)
 
     fun spawnEnemies(amount: Int) {
         val nonWallOrPlayerTiles = maze.Tiles.flatten().filter { !it.IsWall && gameManager.player?.currentTile != it }
@@ -39,6 +42,7 @@ class EnemyManager(private var context: Context,private val maze: Maze, var game
                     tile != enemy.currentTile && occupiedTiles.contains(tile)
                 },
                 onHitPlayer = {
+                    hitSfx.start()
                     gameManager.damagePlayer(1)
                 }
             )
