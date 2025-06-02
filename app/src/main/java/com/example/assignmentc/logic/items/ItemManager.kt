@@ -51,14 +51,15 @@ class ItemManager(
      */
     fun tryPickUp(tile: Tile): Boolean {
         // 1) Look for score‐only items first (ignore isPlaced flag)
-        val scorePickup = _items.firstOrNull {
-            it.tile == tile && (it is DollarBillItem || it is DollarStackItem || it is MoneyBagItem)
+        val instantUsePickup = _items.firstOrNull {
+            it.tile == tile && (it is DollarBillItem || it is DollarStackItem || it is MoneyBagItem || it is MedKit)
         }
-        if (scorePickup != null) {
+        if (instantUsePickup != null) {
             // Award points and remove
-            scorePickup.onPlayerPickup(gameManager)
-            remove(scorePickup)
-            scoreSfx.start()
+            instantUsePickup.onPlayerPickup(gameManager)
+            remove(instantUsePickup)
+            if (!(instantUsePickup is MedKit))
+                scoreSfx.start()
             return true
         }
 
