@@ -86,7 +86,10 @@ fun MazePickerScreen(
                     description = "Left",
                     spriteSheet = buttonSpriteSheet,
                     button = 1 + Direction.West.ordinal,
-                    onClick = { viewModel.prevMaze(mazeTypes.size) })
+                    onClick = {
+                        viewModel.prevMaze(mazeTypes.size)
+                        MediaPlayer.create(context,R.raw.footstep).start()
+                    })
 
                 Text(text = "${currentMazeIndex + 1}/${mazeTypes.size}")
 
@@ -94,7 +97,10 @@ fun MazePickerScreen(
                     description = "Right",
                     spriteSheet = buttonSpriteSheet,
                     button = 1 + Direction.East.ordinal,
-                    onClick = { viewModel.nextMaze(mazeTypes.size) })
+                    onClick = {
+                        viewModel.nextMaze(mazeTypes.size)
+                        MediaPlayer.create(context,R.raw.footstep).start()
+                    })
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -113,7 +119,10 @@ fun MazePickerScreen(
                     description = "Cancel",
                     spriteSheet = buttonSpriteSheet,
                     button = 6,
-                    onClick = onCancel)
+                    onClick = {
+                        onCancel()
+                        MediaPlayer.create(context,R.raw.hit).start()
+                    })
 
                 /*Button(
                     onClick = { onMazeSelected(currentMaze) }

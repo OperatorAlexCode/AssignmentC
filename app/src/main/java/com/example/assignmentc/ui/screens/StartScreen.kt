@@ -2,6 +2,7 @@ package com.example.assignmentc.ui.screens
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -24,6 +25,9 @@ fun StartScreen(
     onStartGame: () -> Unit,
     onShowLeaderboard: () -> Unit
 ) {
+    var context = LocalContext.current
+    var buttonSfx = MediaPlayer.create(context,R.raw.footstep)
+
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -46,7 +50,9 @@ fun StartScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(
-                onClick = onStartGame,
+                onClick = {
+                    onStartGame()
+                    buttonSfx.start() },
                 modifier = Modifier.width(200.dp),
                 elevation = ButtonDefaults.buttonElevation(8.dp)
             ) {
@@ -56,7 +62,9 @@ fun StartScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = onShowLeaderboard,
+                onClick = {
+                    onShowLeaderboard()
+                    buttonSfx.start() },
                 modifier = Modifier.width(200.dp),
                 elevation = ButtonDefaults.buttonElevation(8.dp)
             ) {

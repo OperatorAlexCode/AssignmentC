@@ -2,6 +2,7 @@
 
 package com.example.assignmentc.ui.screens
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,7 @@ import com.example.assignmentc.data.ScoreRepository
 import com.example.assignmentc.ui.components.ScoreEntryRow
 import com.example.assignmentc.ui.viewmodels.LeaderboardViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.assignmentc.R
 import com.example.assignmentc.data.FirestoreRepository
 import kotlinx.coroutines.launch
 
@@ -73,6 +75,9 @@ fun LeaderboardScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
+    var buttonSfx = MediaPlayer.create(context,R.raw.footstep)
+    var errorSfx = MediaPlayer.create(context,R.raw.hit)
+
     // Auto-load online scores when tab is switched
     LaunchedEffect(selectedTab) {
         if (selectedTab == "online" && onlineScores.isEmpty()) {
@@ -90,6 +95,7 @@ fun LeaderboardScreen(
             coroutineScope.launch {
                 snackbarHostState.showSnackbar(errorMessage)
                 viewModel.clearError()
+                errorSfx.start()
             }
         }
     }
@@ -111,12 +117,18 @@ fun LeaderboardScreen(
                 TabButton(
                     text = "Local",
                     isSelected = selectedTab == "local",
-                    onClick = { selectedTab = "local" }
+                    onClick = {
+                        selectedTab = "local"
+                        buttonSfx.start()
+                    }
                 )
                 TabButton(
                     text = "Online",
                     isSelected = selectedTab == "online",
-                    onClick = { selectedTab = "online" }
+                    onClick = {
+                        selectedTab = "online"
+                        buttonSfx.start()
+                    }
                 )
             }
 
@@ -129,7 +141,10 @@ fun LeaderboardScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(
-                        onClick = { viewModel.loadOnlineScores() },
+                        onClick = {
+                            viewModel.loadOnlineScores()
+                            buttonSfx.start()
+                                  },
                         enabled = !isLoading,
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.primary
@@ -207,7 +222,10 @@ fun LeaderboardScreen(
                     .padding(bottom = 40.dp)
             ) {
                 Button(
-                    onClick = onGoToMenu,
+                    onClick = {
+                        onGoToMenu()
+                        errorSfx.start()
+                              },
                     modifier = Modifier
                         .width(200.dp)
                         .align(Alignment.Center),
