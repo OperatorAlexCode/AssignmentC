@@ -21,9 +21,10 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import com.example.assignmentc.R
 import com.example.assignmentc.logic.GameManager
+import com.example.assignmentc.logic.Item
 
 @Composable
-fun ItemBox(modifier: Modifier = Modifier, gameManager: GameManager)
+fun ItemBox(modifier: Modifier = Modifier, item: Item?, onClick: () -> Unit)
 {
     Column(
         modifier = modifier,
@@ -33,9 +34,9 @@ fun ItemBox(modifier: Modifier = Modifier, gameManager: GameManager)
 
         Box(modifier = Modifier.size(80.dp).background(Color.Black)) {
 
-            if (gameManager.getHeldItem() != null)
+            if (item!= null)
             {
-                gameManager.getHeldItem()?.let {
+                item?.let {
                     Image(bitmap = it.getBitmap(LocalContext.current),
                         contentDescription = "",
                         modifier = Modifier.padding(10.dp).fillMaxSize(),
@@ -50,6 +51,6 @@ fun ItemBox(modifier: Modifier = Modifier, gameManager: GameManager)
             description = "Use Item",
             spriteSheet = BitmapFactory.decodeResource(LocalContext.current.resources,R.drawable.buttons),
             button = 0,
-            onClick = { gameManager.useHeldItem() })
+            onClick = onClick)
     }
 }

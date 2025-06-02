@@ -11,6 +11,7 @@ class GameManager(var context: Context, private var maze: Maze) {
 
     var score: Int = 0
     private var playerMoveCount: Int = 0
+    var spawnInterval = 15
     val maxAmountEnemies = 10
 
     var onGameEnd: (() -> Unit)? = null
@@ -89,7 +90,7 @@ class GameManager(var context: Context, private var maze: Maze) {
         player?.currentTile?.let { itemManager.tryPickUp(it) }
 
         playerMoveCount++
-        if (playerMoveCount >= 10) { //5 may be changed for balancing purposes
+        if (playerMoveCount >= spawnInterval) { //5 may be changed for balancing purposes
             if (EnemyManager.enemies.size < maxAmountEnemies) {
                 EnemyManager.spawnEnemies(1)
                 playerMoveCount = 0

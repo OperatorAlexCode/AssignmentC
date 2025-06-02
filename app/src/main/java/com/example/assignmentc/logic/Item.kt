@@ -2,10 +2,12 @@ package com.example.assignmentc.logic
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.example.assignmentc.R
 
-sealed class Item(open var tile: Tile) {
+sealed class Item(open var context: Context, open var tile: Tile) {
 
     // Has the player already placed this item (vs. it lying on the ground)?
     abstract val isPlaced: Boolean

@@ -1,6 +1,8 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import android.media.MediaPlayer
+import com.example.assignmentc.R
 
 class ItemManager(
     private val maze: Maze,
@@ -14,7 +16,7 @@ class ItemManager(
 
     var heldItem: Item? = null
 
-    private val trapSpawnIntervalTurns = 7    // spawn a new banana‐trap every 5 turns
+    /*private val trapSpawnIntervalTurns = 7    // spawn a new banana‐trap every 5 turns
     private var turnsSinceLastTrap = 0
 
     // Separate counter for bombs
@@ -23,10 +25,16 @@ class ItemManager(
 
     // Counter for score‐only pickups
     private val coinSpawnIntervalTurns = 5    // spawn a coin every 3 turns
-    private var turnsSinceLastCoin = 0
+    private var turnsSinceLastCoin = 0*/
+
+    val spawnInterval = 7
+    var currentInterval = 0
 
     // Optional cap of banana traps, for testing purposes
     private val maxGroundTraps = 4
+
+    val pickupSfx: MediaPlayer = MediaPlayer.create(context,R.raw.slip)
+    val scoreSfx: MediaPlayer = MediaPlayer.create(context,R.raw.scoreup)
 
     /**
      * Attempt to pick up any item on `tile`. Priority:
@@ -45,6 +53,7 @@ class ItemManager(
             // Award points and remove
             scorePickup.onPlayerPickup(gameManager)
             remove(scorePickup)
+            scoreSfx.start()
             return true
         }
 
@@ -53,6 +62,7 @@ class ItemManager(
         heldItem?.let { remove(it) }
         heldItem = pickup
         remove(pickup)
+        pickupSfx.start()
         return true
     }
 
@@ -107,12 +117,12 @@ class ItemManager(
 
     // Spawn a new TrapItem lying on the ground at tile T
     fun spawnTrap(at: Tile) {
-        _items += TrapItem(at)
+        _items += TrapItem(context,at)
     }
 
     // Spawn a new BombItem lying on the ground at tile T
     fun spawnBomb(at: Tile) {
-        _items += BombItem(at, context)
+        _items += BombItem(context,at)
     }
 
     // Remove an item when it’s picked up or triggered
@@ -128,12 +138,12 @@ class ItemManager(
      *  - Score‐items (“coins”) every `coinSpawnIntervalTurns`
      */
     fun onNewTurn() {
-        turnsSinceLastTrap++
-        turnsSinceLastBomb++
-        turnsSinceLastCoin++
+        //turnsSinceLastTrap++
+        //turnsSinceLastBomb++
+        //turnsSinceLastCoin++
 
         // (1) Trap logic (every 5 turns, up to cap)
-        val groundTrapCount = _items.count { it is TrapItem && !it.isPlaced }
+        /*val groundTrapCount = _items.count { it is TrapItem && !it.isPlaced }
         if (turnsSinceLastTrap >= trapSpawnIntervalTurns && groundTrapCount < maxGroundTraps) {
             chooseSpawnTile()?.let { spawnTrap(it) }
             turnsSinceLastTrap = 0
@@ -149,12 +159,40 @@ class ItemManager(
         if (turnsSinceLastCoin >= coinSpawnIntervalTurns) {
             chooseSpawnTile()?.let { spawnTile ->
                 when ((1..3).random()) {
-                    1 -> _items += DollarBillItem(spawnTile)
-                    2 -> _items += DollarStackItem(spawnTile)
-                    else -> _items += MoneyBagItem(spawnTile)
+                    1 -> _items += DollarBillItem(context,spawnTile)
+                    2 -> _items += DollarStackItem(context,spawnTile)
+                    else -> _items += MoneyBagItem(context,spawnTile)
                 }
             }
             turnsSinceLastCoin = 0
+        }*/
+
+        if (currentInterval++ >= spawnInterval) {
+
+            chooseSpawnTile()?.let { spawnTile ->
+
+                if ((1..10).random() <= 6)
+                    /*when ((1..3).random()) {
+                        1 -> _items += DollarBillItem(context,spawnTile)
+                        2 -> _items += DollarStackItem(context,spawnTile)
+                        else -> _items += MoneyBagItem(context,spawnTile)
+                    }*/
+                    when ((1..6).random()) {
+                        4 -> _items += DollarStackItem(context,spawnTile)
+                        5 -> _items += DollarStackItem(context,spawnTile)
+                        6 -> _items += MoneyBagItem(context,spawnTile)
+                        else -> _items += DollarBillItem(context,spawnTile)
+                    }
+
+                else{
+                    when ((1..2).random()) {
+                        1 -> spawnTrap(spawnTile)
+                        2 -> spawnBomb(spawnTile)
+                    }
+                }
+            }
+
+            currentInterval = 0
         }
     }
 

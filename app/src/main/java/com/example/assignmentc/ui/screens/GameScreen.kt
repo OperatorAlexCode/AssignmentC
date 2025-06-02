@@ -101,7 +101,8 @@ fun GameScreen(
 
                 Spacer(Modifier.size(30.dp))
 
-                ItemBox(gameManager = gameManager)
+                ItemBox(item = gameManager.getHeldItem(),
+                    onClick = { gameManager.useHeldItem() })
             }
         }
     }

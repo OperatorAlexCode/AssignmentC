@@ -1,17 +1,17 @@
 package com.example.assignmentc.logic
 
 import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.ui.graphics.asImageBitmap
 import com.example.assignmentc.R
 
 class BombItem(
-    override var tile: Tile,
-    private val context: Context
-) : Item(tile) {
+    override var context: Context,
+    override var tile: Tile
+) : Item(context,tile) {
 
     private var placed    = false
     override val isPlaced: Boolean get() = placed
-
 
     private var primed    = false
     val isPrimed: Boolean get() = primed
@@ -27,6 +27,9 @@ class BombItem(
     private val explosionAnimator =
         Animator(context, R.drawable.explosion, rows = 1, columns = 3)
 
+    val useSfx: MediaPlayer = MediaPlayer.create(context,R.raw.place)
+    val activateSfx: MediaPlayer = MediaPlayer.create(context,R.raw.explosion)
+
     override fun spriteRes(): Int = R.drawable.bomb
 
     override fun place(on: Tile) {
@@ -34,14 +37,15 @@ class BombItem(
         primed = true
         tile   = on
         turnsUntilExplode = 3
+        useSfx.start()
     }
 
     override fun onTrigger(gameManager: GameManager, triggeringEnemy: Enemy) {
         // Force the bomb into “exploding” state immediately
-        primed = false
+        /*primed = false
         exploding = true
         // Award base points for stepping on it
-        gameManager.increaseScore(15)
+        gameManager.increaseScore(15)*/
     }
 
 
@@ -59,6 +63,7 @@ class BombItem(
                     // Time to explode
                     primed = false
                     exploding = true
+                    activateSfx.start()
                 }
 
                 false
