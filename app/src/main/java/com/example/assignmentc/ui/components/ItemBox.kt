@@ -47,6 +47,9 @@ fun ItemBox(modifier: Modifier = Modifier, item: Item?, onClick: () -> Unit)
                         filterQuality = FilterQuality.None)
                 }
             }
+
+            else if (item == null)
+                itemUsed = false
         }
 
         Spacer(modifier = Modifier.size(10.dp))

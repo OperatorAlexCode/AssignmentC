@@ -7,13 +7,32 @@ import com.example.assignmentc.logic.GameManager
 import com.example.assignmentc.logic.other.Maze
 import com.example.assignmentc.logic.other.Tile
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class EnemyManager(private var context: Context, private val maze: Maze, var gameManager: GameManager) {
     var enemies: MutableList<Enemy> = mutableListOf()
     var hitSfx = MediaPlayer.create(context,R.raw.hit)
 
     fun spawnEnemies(amount: Int) {
-        val nonWallOrPlayerTiles = maze.Tiles.flatten().filter { !it.IsWall && gameManager.player?.currentTile != it }
+        val nonWallOrPlayerTiles = maze.Tiles.flatten().filter { tile ->
+            var playerTile = gameManager.player?.currentTile
+
+            var closeToPlayer = false
+
+            playerTile?.let {
+                var minX = max(it.XPos - 3,0)
+                var maxX = min(it.XPos + 3,maze.Size-1)
+
+                var minY = max(it.YPos - 3,0)
+                var maxY = min(it.YPos + 3,maze.Size-1)
+
+                closeToPlayer = tile.XPos in minX..maxX && tile.YPos in minY..maxY
+            }
+
+            !tile.IsWall && playerTile != tile && !closeToPlayer
+        }
+
         val spawnTiles = nonWallOrPlayerTiles.shuffled().take(amount)
 
         for (tile in spawnTiles) {
