@@ -39,7 +39,6 @@ class GameManager(var context: Context, private var maze: Maze) {
         }
 
         score+=1
-        EnemyManager.moveAllEnemies()
 
         // Changed here
         val enemiesSnapshot = EnemyManager.enemies.toList()
@@ -134,5 +133,9 @@ class GameManager(var context: Context, private var maze: Maze) {
 
     fun damagePlayer(amount: Int) {
         player?.Hurt(amount)
+    }
+
+    fun getHeldItem():Item? {
+        return itemManager.heldItem
     }
 }

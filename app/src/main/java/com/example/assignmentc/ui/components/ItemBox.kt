@@ -32,11 +32,16 @@ fun ItemBox(modifier: Modifier = Modifier, gameManager: GameManager)
     ) {
 
         Box(modifier = Modifier.size(80.dp).background(Color.Black)) {
-            // Placeholder for testing
-            Image(bitmap = ImageBitmap.imageResource(R.drawable.wall),
-                contentDescription = "",
-                modifier = Modifier.padding(10.dp).fillMaxSize(),
-                filterQuality = FilterQuality.None)
+
+            if (gameManager.getHeldItem() != null)
+            {
+                gameManager.getHeldItem()?.let {
+                    Image(bitmap = it.getBitmap(LocalContext.current),
+                        contentDescription = "",
+                        modifier = Modifier.padding(10.dp).fillMaxSize(),
+                        filterQuality = FilterQuality.None)
+                }
+            }
         }
 
         Spacer(modifier = Modifier.size(10.dp))
@@ -45,6 +50,6 @@ fun ItemBox(modifier: Modifier = Modifier, gameManager: GameManager)
             description = "Use Item",
             spriteSheet = BitmapFactory.decodeResource(LocalContext.current.resources,R.drawable.buttons),
             button = 0,
-            onClick = { /*Call Relevant game manager for using item*/ })
+            onClick = { gameManager.useHeldItem() })
     }
 }
