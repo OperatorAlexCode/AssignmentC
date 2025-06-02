@@ -3,6 +3,7 @@ package com.example.assignmentc.ui.screens
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,8 @@ fun DeathScreen(
     var name by remember { mutableStateOf("") }
     var submitOnline by remember { mutableStateOf(false) }
     var submitted by remember { mutableStateOf(false) }
+    var buttonSfx = MediaPlayer.create(context,R.raw.footstep)
+    var errorSfx = MediaPlayer.create(context,R.raw.hit)
 
     Scaffold { innerPadding ->
         Column(
@@ -100,7 +103,11 @@ fun DeathScreen(
             ) {
                 Checkbox(
                     checked = submitOnline,
-                    onCheckedChange = { submitOnline = it }
+                    onCheckedChange = {
+                        submitOnline = it
+                        if (buttonSfx.isPlaying) buttonSfx.seekTo(0)
+                        else buttonSfx.start()
+                    }
                 )
                 Text("Submit online", modifier = Modifier.padding(start = 8.dp))
             }
@@ -114,6 +121,9 @@ fun DeathScreen(
                             viewModel.submitOnlineScore(name, score)
                         }
                         submitted = true
+
+                        if (buttonSfx.isPlaying) buttonSfx.seekTo(0)
+                        else buttonSfx.start()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(0.5f),
@@ -129,10 +139,17 @@ fun DeathScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Button(onClick = onGoToMenu) {
+                Button(onClick = {
+                    onGoToMenu()
+                    errorSfx.start()
+                }) {
                     Text("Main Menu")
                 }
-                Button(onClick = onNavigateToLeaderboard) {
+                Button(onClick = {
+                    onNavigateToLeaderboard()
+                    if (buttonSfx.isPlaying) buttonSfx.seekTo(0)
+                    else buttonSfx.start()
+                }) {
                     Text("Leaderboard")
                 }
             }

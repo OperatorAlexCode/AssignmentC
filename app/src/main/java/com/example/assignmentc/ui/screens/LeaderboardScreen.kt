@@ -119,7 +119,8 @@ fun LeaderboardScreen(
                     isSelected = selectedTab == "local",
                     onClick = {
                         selectedTab = "local"
-                        buttonSfx.start()
+                        if (buttonSfx.isPlaying) buttonSfx.seekTo(0)
+                        else buttonSfx.start()
                     }
                 )
                 TabButton(
@@ -127,7 +128,8 @@ fun LeaderboardScreen(
                     isSelected = selectedTab == "online",
                     onClick = {
                         selectedTab = "online"
-                        buttonSfx.start()
+                        if (buttonSfx.isPlaying) buttonSfx.seekTo(0)
+                        else buttonSfx.start()
                     }
                 )
             }
